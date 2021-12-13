@@ -1,0 +1,81 @@
+POST http://localhost:4001/v1/user/login
+Content-Type: application/json
+
+{
+    "username": "kto2303",
+    "password": "123"
+}
+###
+
+POST http://localhost:4001/v1/user/register
+Content-Type: application/json
+
+{
+    "username": "kto23031",
+    "password": "123456",
+    "email": "khanhpro123@gmail.com"
+}
+
+### 
+POST http://localhost:4001/v1/user/reset-password
+Content-Type: application/json
+
+{
+    "username": "kto2303",
+    "email": "kto2303@gmail.com"
+}
+###
+POST http://localhost:4001/v1/user/reset-password/61adc9ceb6e82cb1a5527e4f/6ea85265b5118c27d7e8920447c6d813daef265033edcab495560928963ff1ea
+Content-Type: application/json
+
+{
+    "password": "123"
+}
+
+###
+GET http://localhost:4001/v1/student/student-profile
+Content-Type: application/json
+
+
+###
+GET http://localhost:4001/v1/training-department/subject
+Content-Type: application/json
+
+{
+    "data": {
+        "name": "adada"
+    }
+}
+###
+GET http://localhost:4001/v1/training-department/subject
+
+###
+POST http://localhost:4001/v1/training-department/subject
+Content-Type: application/json
+
+{
+    "name": "Discrete Mathematics",
+    "code": "IT3020",
+    "institude": "61af8b81c07885175ff699e4",
+    "credit": 3
+}
+
+### 
+PUT http://localhost:4001/v1/training-department/subject
+Content-Type: application/json
+
+{
+    
+}
+###
+DELETE http://localhost:4001/v1/training-department/subject
+Content-Type: application/json
+
+{
+
+}
+###
+GET http://localhost:4001/v1/training-department/education
+
+
+
