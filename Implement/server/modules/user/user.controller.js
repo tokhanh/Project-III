@@ -17,6 +17,11 @@ module.exports = {
                 if (result) {
                     return res.send({
                         message: 'success',
+                        content: {
+                            email: user.email,
+                            username: user.username,
+                            uid: user._id,
+                        },
                     })
                 } else {
                     next(createError.BadRequest('Email or password is wrong'))
@@ -25,7 +30,7 @@ module.exports = {
                 next(createError.BadRequest('Email or password is wrong'))
             }
         } catch (err) {
-            console.log(err)
+            next(createError.InternalServerError())
         }
     },
     register: async (req, res, next) => {
@@ -65,10 +70,10 @@ module.exports = {
             })
             if (user) {
                 const recoveryToken = generateRecoveryToken()
-                
+
                 await new Token({
                     value: recoveryToken,
-                    user: user._id
+                    user: user._id,
                 }).save()
 
                 const linkRecovery = `http://localhost:4001/v1/user/reset-password/${user._id}/${recoveryToken}`
@@ -92,13 +97,13 @@ module.exports = {
             const password = req.body.password
 
             const user = await User.findOne({
-                _id: userId
+                _id: userId,
             })
 
             if (user) {
                 const token = await Token.findOne({
                     user: user._id,
-                    value: recoveryToken
+                    value: recoveryToken,
                 })
                 if (token) {
                     user.password = password

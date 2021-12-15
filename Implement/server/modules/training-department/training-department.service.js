@@ -3,7 +3,7 @@ const EducationProgram = require('../../models/educationProgram.model')
 const Subject = require('../../models/subject.model')
 
 /*Subject service*/
-const getListSubjects = async (params) => {
+const getListSubjects = async (params = {}) => {
     const {} = params
     const keySearch = {}
     const listSubjects = await Subject.find({ ...keySearch }).populate({
@@ -20,8 +20,19 @@ const createNewSubject = async (data = {}) => {
 }
 
 const updateSubject = async (data = {}) => {
-    const updatedSubject = await Subject.updateOne({ ...data })
-    return updatedSubject
+    const { _id } = data
+    // const isExistedId = (await getListSubjects())
+    //     .map((item) => item._id.toString())
+    //     .find((id) => id == _id)
+
+    if (_id) {
+        const updatedSubject = await Subject.updateOne(
+            { _id: _id },
+            { $set: { ...data } },
+            { upsert: true }
+        )
+        return updatedSubject
+    } else throw 'update failed'
 }
 
 const deleteSubject = async (data = {}) => {

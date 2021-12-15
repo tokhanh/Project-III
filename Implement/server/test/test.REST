@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
     "username": "kto2303",
-    "password": "123"
+    "password": "123456"
 }
 ###
 
@@ -65,7 +65,7 @@ PUT http://localhost:4001/v1/training-department/subject
 Content-Type: application/json
 
 {
-    
+    "_id": "61af94c19fe67c64889d3687"
 }
 ###
 DELETE http://localhost:4001/v1/training-department/subject

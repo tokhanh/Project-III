@@ -2,6 +2,7 @@ const express = require('express')
 const helmet = require('helmet')
 const config = require('./config/config')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 require('./helpers/connectDB')
 
 const userRouter = require('./modules/user/user.route')
@@ -18,6 +19,9 @@ app.use(
 )
 app.use(bodyParser.json())
 app.use(helmet())
+app.use(cors({
+    origin: 'http://localhost:3000'
+}))
 
 app.use('/v1/user', userRouter)
 app.use('/v1/student', studentRouter)

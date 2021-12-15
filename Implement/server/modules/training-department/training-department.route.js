@@ -1,36 +1,27 @@
 const express = require('express')
-const createHttpError = require('http-errors')
 const Joi = require('joi')
 
 const TrainingDepartmentController = require('../training-department/training-department.controller')
 
 const router = express.Router()
 
-const validateSubjectMiddleware = (req, res, next) => {
+const validateSubject = (data) => {
     const subjectSchema = Joi.object({
-        name: Joi.string().required(),
-        code: Joi.string().required(),
-        credit: Joi.number().required(),
-        institude: Joi.string().required(),
+        name: Joi.string(),
+        code: Joi.string(),
+        credit: Joi.number(),
+        institude: Joi.string(),
     })
-    const validation = subjectSchema.validate(req.body.data)
-    if (!validation.value || validation.error) {
-        next(createHttpError.BadRequest(validation.error.details))
-    } else next()
+    return subjectSchema.validate(data)
 }
 
-const validateEducationProgramMiddleware = (req, res, next) => {
+const validateEducationProgram = (data) => {
     const educationProgramSchema = Joi.object({
         code: Joi.string().required(),
         name: Joi.string().required(),
         subjects: Joi.array().items(Joi.string()),
     })
-    const validation = educationProgramSchema.validate(req.body.data)
-    if (!validation.value || validation.error) {
-        next(createHttpError.BadRequest('Bad credentials'))
-    } else {
-        next()
-    }
+    return educationProgramSchema.validate(data)
 }
 /*Subject controller*/
 

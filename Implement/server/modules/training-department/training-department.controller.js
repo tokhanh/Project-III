@@ -3,6 +3,7 @@ const TrainingService = require('./training-department.service')
 
 const getListSubjects = async (req, res, next) => {
     try {
+        console.log(req.query)
         const data = await TrainingService.getListSubjects(req.body)
         return res.status(200).send({
             success: true,
