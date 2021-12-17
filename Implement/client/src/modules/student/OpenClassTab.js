@@ -5,7 +5,7 @@ import sendRequest from '../../helpers/requestHelpers'
 
 const { Search } = Input
 
-export default function OpenClass() {
+export default function OpenClassTab() {
     const [listClass, setListClass] = useState([])
     const [keySeach, setKeySearch] = useState('')
 

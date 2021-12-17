@@ -9,8 +9,8 @@ export default function MainLayout({ component }) {
     const { logout } = useGlobalContext()
     const linkList = [
         { path: '/', to: 'Home' },
-        { path: '/register-unit', to: 'Register Unit' },
-        { path: '/register-class', to: 'Register Class' },
+        { path: '/profile-and-education-program', to: 'Profile & Education' },
+        { path: '/class', to: 'Class' },
     ]
 
     const DropdownMenu = (

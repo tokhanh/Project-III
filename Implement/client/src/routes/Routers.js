@@ -2,8 +2,8 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainLayout from '../layout/MainLayout'
 import Page404 from '../layout/Page404'
-import RegisterClass from '../modules/student/RegisterClass'
-import RegisterUnit from '../modules/student/RegisterUnit'
+import Class from '../modules/student/Class'
+import ProfileAndEducationProgram from '../modules/student/ProfileAndEducationProgram'
 import Home from '../modules/users/Home'
 import Login from '../modules/users/Login'
 import PrivateRoute from './PrivateRoute'
@@ -22,21 +22,21 @@ export default function Routers() {
                     }
                 />
                 <Route
-                    path="/register-unit"
+                    path="/profile-and-education-program"
                     element={
                         <PrivateRoute
                             component={
-                                <MainLayout component={<RegisterUnit />} />
+                                <MainLayout component={<ProfileAndEducationProgram />} />
                             }
                         />
                     }
                 />
                 <Route
-                    path="/register-class"
+                    path="/class"
                     element={
                         <PrivateRoute
                             component={
-                                <MainLayout component={<RegisterClass />} />
+                                <MainLayout component={<Class />} />
                             }
                         />
                     }

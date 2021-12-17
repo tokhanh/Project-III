@@ -42,7 +42,8 @@ const generateData = async () => {
         studentId: '20183933',
         status: 'learning',
         yearOfAdmission: 2018,
-        institude: '61af8b6645ff3d2db122f84c',
+        educationProgram: '61af9dcdcacfdf2dc94c5b8c',
+        institude: '61af8b81c07885175ff699e4',
         registerUnitOfStudies: [],
     })
 
@@ -52,6 +53,7 @@ const generateData = async () => {
         studentId: '20183934',
         status: 'learning',
         yearOfAdmission: 2018,
+        educationProgram: '61af9dcdcacfdf2dc94c5b8d',
         institude: '61af8b6645ff3d2db122f84c',
         registerUnitOfStudies: [],
     })
@@ -69,7 +71,7 @@ const generateData = async () => {
         description:
             'Viện Toán ứng dụng và Tin học, Trường Đại học Bách khoa Hà Nội, là đơn vị nghiên cứu và đào tạo đại học, sau đại học có uy tín về lĩnh vực Toán học và  Tin học',
         address: '1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội',
-        educationPrograms: ['61af9dcdcacfdf2dc94c5b8c'],
+        educationPrograms: ['61af9dcdcacfdf2dc94c5b8d'],
     })
     const soict = new Institude({
         _id: '61af8b81c07885175ff699e4',
@@ -78,7 +80,7 @@ const generateData = async () => {
         description:
             'SoICT 2022 is an international symposium covering four significant research areas that include AI Foundations and Big Data, Communication Networking, Image and Natural Language Processing, Digital Technology trends.',
         address: 'B1 504, No.1, Dai Co Viet Rd, Hanoi, Vietnam',
-        educationPrograms: ['61af9dcdcacfdf2dc94c5b8d'],
+        educationPrograms: ['61af9dcdcacfdf2dc94c5b8c'],
     })
     await mathInstitude.save()
     await soict.save()

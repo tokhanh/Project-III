@@ -18,6 +18,10 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    educationProgram: {
+        type: mongoose.Types.ObjectId,
+        ref: 'EducationProgram',
+    },
     institude: {
         type: mongoose.Types.ObjectId,
         ref: 'Institude',

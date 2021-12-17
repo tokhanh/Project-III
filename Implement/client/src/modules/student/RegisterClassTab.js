@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Register() {
+export default function RegisterClassTab() {
     return (
         <div>
-            Hi ! Register
+            Hi ! Register Class
         </div>
     )
 }

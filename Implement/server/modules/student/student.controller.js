@@ -2,8 +2,9 @@ const createHttpError = require('http-errors')
 const StudentService = require('./student.service')
 
 const getProfile = async (req, res, next) => {
+    const params = req.query
     try {
-        const data = 'await getStudentDataService()'
+        const data = await StudentService.getStudentProfile(params)
         return res.status(200).json({
             success: true,
             message: 'get_data_success',
