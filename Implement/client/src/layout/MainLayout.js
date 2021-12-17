@@ -15,11 +15,13 @@ export default function MainLayout({ component }) {
 
     const DropdownMenu = (
         <Menu>
-            <Menu.Item key={"1"}>
+            <Menu.Item key={'1'}>
                 <a>Settings</a>
             </Menu.Item>
-            <Menu.Item key={"2"}>
-                <Link to="/" onClick={logout}>Logout</Link>
+            <Menu.Item key={'2'}>
+                <Link to="/" onClick={logout}>
+                    Logout
+                </Link>
             </Menu.Item>
         </Menu>
     )

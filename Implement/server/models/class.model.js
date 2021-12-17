@@ -4,11 +4,17 @@ const classModel = new mongoose.Schema({
     code: {
         type: Number,
         required: true,
-        unique: true
+        unique: true,
     },
     time: {
-        type: Date,
-        required: true,
+        day: {
+            type: Number,
+            required: true,
+        },
+        shift: {
+            type: Number,
+            required: true,
+        },
     },
     position: {
         type: String,
@@ -17,6 +23,10 @@ const classModel = new mongoose.Schema({
     subjectId: {
         type: mongoose.Types.ObjectId,
         ref: 'Subject',
+    },
+    maximum: {
+        type: Number,
+        required: true,
     },
     students: [
         {

@@ -50,6 +50,10 @@ Content-Type: application/json
 GET http://localhost:4001/v1/training-department/subject
 
 ###
+GET http://localhost:4001/v1/training-department/class
+
+
+###
 POST http://localhost:4001/v1/training-department/subject
 Content-Type: application/json
 

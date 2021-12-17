@@ -60,9 +60,10 @@ const deleteSubject = async (data = {}) => {
 /*Class service*/
 
 const getListClass = async (params = {}) => {
-    const {} = params
+    const { codeKey } = params
     const keySeach = {}
-    const listClass = await Class.find({ ...keySeach }).populate([
+
+    let listClass = await Class.find({ ...keySeach }).populate([
         {
             path: 'subjectId',
         },
@@ -70,6 +71,12 @@ const getListClass = async (params = {}) => {
             path: 'students',
         },
     ])
+    if (codeKey) {
+        const reg = new RegExp(`${codeKey}`, 'gi')
+        listClass = listClass.filter((i) => {
+            return i.subjectId.code.toString().match(reg)
+        })
+    }
     return listClass
 }
 const createNewClass = async (data = {}) => {

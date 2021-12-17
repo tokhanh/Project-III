@@ -58,7 +58,8 @@ const deleteSubject = async (req, res, next) => {
 
 const getListClass = async (req, res, next) => {
     try {
-        const data = "await getListClass(data)"
+        const params = req.query
+        const data = await TrainingService.getListClass(params)
         return res.status(200).send({
             success: true,
             message: "get_data_success",

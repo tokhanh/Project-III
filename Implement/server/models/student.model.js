@@ -6,9 +6,9 @@ const studentSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    userId: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
+    name: {
+        type: String,
+        required: true,
     },
     status: {
         type: String,
@@ -17,6 +17,10 @@ const studentSchema = new mongoose.Schema({
     yearOfAdmission: {
         type: String,
         required: true,
+    },
+    institude: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Institude',
     },
     registerUnitOfStudies: [
         {

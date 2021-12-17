@@ -14,7 +14,11 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-    }
+    },
+    student: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Student',
+    },
 })
 
 userSchema.pre('save', async function (next) {
