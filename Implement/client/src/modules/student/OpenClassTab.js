@@ -107,6 +107,7 @@ export default function OpenClassTab() {
 
     useEffect(() => {
         return fetchData()
+        // eslint-disable-next-line
     }, [])
 
     return (

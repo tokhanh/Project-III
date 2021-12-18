@@ -1,5 +1,5 @@
 import { Button, Input, Form, message } from 'antd'
-import React, { useEffect,  useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useGlobalContext } from '../../global/GlobalContext'
@@ -46,8 +46,9 @@ export default function Login() {
             }
         }
         return () => detectLogin()
+        // eslint-disable-next-line
     }, [user, isLoading])
-    
+
     return (
         <LoginContainer>
             <Form
@@ -81,9 +82,7 @@ export default function Login() {
                         },
                     ]}
                 >
-                    <Input.Password
-                        onChange={handleChangePassword}
-                    />
+                    <Input.Password onChange={handleChangePassword} />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

@@ -2,7 +2,7 @@ import { message, Tabs } from 'antd'
 import React, { useContext, useEffect, useState } from 'react'
 import EducationProgramTab from './EducationProgramTab'
 import RegisterUnitOfStudyTab from './RegisterUnitOfStudy'
-import StudentProfileTab from './ProfileTab'
+import ProfileTab from './ProfileTab'
 import { useGlobalContext } from '../../global/GlobalContext'
 import sendRequest from '../../helpers/requestHelpers'
 import { RequestMethods } from '../../global/Constants'
@@ -22,9 +22,11 @@ export default function ProfileAndEducationProgram() {
         student: {},
         institude: {},
         educationProgram: {},
+        registerUnitOfStudies: []
     })
 
     async function fetchStudentProfile() {
+        setLoading(true)
         const response = await sendRequest({
             method: RequestMethods.GET,
             url: 'http://localhost:4001/v1/student/student-profile',
@@ -35,27 +37,33 @@ export default function ProfileAndEducationProgram() {
         if (response) {
             setStudentInformation({
                 ...studentInfomation,
-                institude: response.data.content[0].institude[0],
-                student: response.data.content[0].student[0],
+                institude: response.data.content[0]?.institude[0],
+                student: response.data.content[0]?.student[0],
                 educationProgram: {
-                    code: response.data.content[0].educationProgram[0].code,
-                    name: response.data.content[0].student[0].name,
-                    subjects: response.data.content[0].subjects,
+                    code: response.data.content[0].educationProgram[0]?.code,
+                    name: response.data.content[0].student[0]?.name,
+                    subjects: response.data.content[0]?.subjects,
                 },
+                registerUnitOfStudies: response.data.content[0]?.student[0]?.registerUnitOfStudies,
             })
+            setLoading(false)
         } else {
             message.error('Get student data failed')
+            setLoading(false)
         }
     }
 
     useEffect(() => {
-        setLoading(true)
         fetchStudentProfile()
-        setLoading(false)
+        // eslint-disable-next-line
     }, [])
 
-    console.log(studentInfomation)
-    const value = { studentInfomation }
+    const value = {
+        studentInfomation,
+        student: studentInfomation.student,
+        educationProgram: studentInfomation.educationProgram,
+        institude: studentInfomation.institude,
+    }
     return (
         <StudentContext.Provider value={value}>
             {!loading && (
@@ -65,7 +73,7 @@ export default function ProfileAndEducationProgram() {
                     style={{ margin: '10px' }}
                 >
                     <TabPane tab="Profile" key="1">
-                        <StudentProfileTab />
+                        <ProfileTab />
                     </TabPane>
                     <TabPane tab="Education Program" key="2">
                         <EducationProgramTab />

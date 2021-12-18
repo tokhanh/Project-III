@@ -216,7 +216,7 @@ const generateData = async () => {
     const it7 = new Subject({
         _id: '61bc12856e3b302f565a9d10',
         name: 'Linux and Opensource Software',
-        code: 'IT13110',
+        code: 'IT3110',
         description: '',
         credit: 2,
         institude: '61af8b81c07885175ff699e4',

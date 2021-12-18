@@ -16,6 +16,7 @@ export default function MainLayout({ component }) {
     const DropdownMenu = (
         <Menu>
             <Menu.Item key={'1'}>
+                {/* eslint-disable-next-line */}
                 <a>Settings</a>
             </Menu.Item>
             <Menu.Item key={'2'}>
@@ -67,6 +68,7 @@ export default function MainLayout({ component }) {
                 >
                     <div>
                         <Dropdown overlay={DropdownMenu} trigger={['click']}>
+                            {/* eslint-disable-next-line */}
                             <a onClick={(e) => e.preventDefault()}>
                                 <i className="fas fa-caret-down"></i>
                             </a>
