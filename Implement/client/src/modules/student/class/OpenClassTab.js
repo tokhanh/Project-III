@@ -1,12 +1,11 @@
-import { Button, Input, message, Table, Tooltip } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { RequestMethods } from '../../global/Constants'
-import sendRequest from '../../helpers/requestHelpers'
+import { Button, Input, Table, Tooltip } from 'antd'
+import React, { useState } from 'react'
+import { useClassContext } from './Class'
 
 const { Search } = Input
 
 export default function OpenClassTab() {
-    const [listClass, setListClass] = useState([])
+    const { listClass, fetchData } = useClassContext()
     const [keySeach, setKeySearch] = useState('')
 
     const columns = [
@@ -17,8 +16,8 @@ export default function OpenClassTab() {
         },
         {
             title: 'Subject',
-            dataIndex: 'subject',
-            key: 'subject',
+            dataIndex: 'subjectName',
+            key: 'subjectName',
         },
         {
             title: 'Subject Code',
@@ -47,52 +46,6 @@ export default function OpenClassTab() {
         },
     ]
 
-    const convertDate = (data) => {
-        switch (data) {
-            case 2: {
-                return 'Monday'
-            }
-            case 3: {
-                return 'Tuesday'
-            }
-            case 4: {
-                return 'Wednesday'
-            }
-            case 5: {
-                return 'Thursday'
-            }
-            case 6: {
-                return 'Friday'
-            }
-            default:
-                break
-        }
-    }
-
-    const fetchData = async (data = {}) => {
-        const response = await sendRequest({
-            url: 'http://localhost:4001/v1/training-department/class',
-            method: RequestMethods.GET,
-            data: data,
-        })
-        if (response) {
-            setListClass(
-                response.data.content.map((i) => ({
-                    key: i.code,
-                    code: i.code,
-                    subject: i.subjectId.name,
-                    subjectCode: i.subjectId.code,
-                    time: `${convertDate(i.time.day)} - Shift: ${i.time.shift}`,
-                    position: i.position,
-                    numberRegisteredStudent: i.students.length,
-                    maximum: i.maximum,
-                }))
-            )
-        } else {
-            message.error('Get open class failed!')
-        }
-    }
-
     const handleRefreshData = () => {
         fetchData()
     }
@@ -104,11 +57,6 @@ export default function OpenClassTab() {
             codeKey: keySeach,
         })
     }
-
-    useEffect(() => {
-        return fetchData()
-        // eslint-disable-next-line
-    }, [])
 
     return (
         <>

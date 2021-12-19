@@ -1,7 +1,9 @@
 const Student = require('../../models/student.model')
 const User = require('../../models/user.model')
-
 const mongoose = require('mongoose')
+const Class = require('../../models/class.model')
+const TrainingService = require('../training-department/training-department.service')
+
 const getStudentProfile = async (params = {}) => {
     const { id } = params
     const student = await User.aggregate([
@@ -62,20 +64,46 @@ const getListRegisteredUnit = async (params = {}) => {
 }
 
 const updateListRegisterUnit = async (data = {}) => {
-    const { _id } = data
-    const updatedListRegisterUnit = await Student.findOneAndUpdate(
-        { _id: _id },
+    const { sid, uid, registerUnitOfStudies } = data
+    await Student.findOneAndUpdate(
+        { _id: sid },
         {
             $set: {
-                ...data,
+                registerUnitOfStudies: registerUnitOfStudies,
             },
         }
     )
-    return updatedListRegisterUnit
+    const newStudentProfile = await getStudentProfile({ id: uid })
+    return newStudentProfile
+}
+
+const updateClass = async (data = {}) => {
+    const { sid, inClass } = data
+    await Class.updateMany(
+        {},
+        {
+            $pull: {
+                students: mongoose.Types.ObjectId(sid),
+            },
+        },
+        { multi: true }
+    )
+    await Class.updateMany(
+        {
+            _id: {
+                $in: [...inClass.map(i => mongoose.Types.ObjectId(i))],
+            },
+        },
+        {
+            $push: { students: mongoose.Types.ObjectId(sid) },
+        }
+    )
+    return 'update data success'
 }
 
 module.exports = {
     getListRegisteredUnit,
     updateListRegisterUnit,
     getStudentProfile,
+    updateClass,
 }

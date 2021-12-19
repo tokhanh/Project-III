@@ -56,7 +56,7 @@ const viewRegisteredClass = async (req, res, next) => {
 
 const registerClass = async (req, res, next) => {
     try {
-        const data = 'await registerClass(data)'
+        const data = await StudentService.updateClass(req.body)
         return res.status(200).json({
             success: true,
             message: 'update_data_success',

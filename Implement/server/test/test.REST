@@ -83,3 +83,12 @@ GET http://localhost:4001/v1/training-department/education
 
 
 
+###
+POST http://localhost:4001/v1/student/register-class
+Content-Type: application/json
+
+{
+    "sid": "61bc89e654002066071c7f60",
+    "inClass": [],
+    "diffClass": []
+}

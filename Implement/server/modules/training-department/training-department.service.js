@@ -66,10 +66,7 @@ const getListClass = async (params = {}) => {
     let listClass = await Class.find({ ...keySeach }).populate([
         {
             path: 'subjectId',
-        },
-        {
-            path: 'students',
-        },
+        }
     ])
     if (codeKey) {
         const reg = new RegExp(`${codeKey}`, 'gi')

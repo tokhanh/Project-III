@@ -3,9 +3,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import EducationProgramTab from './EducationProgramTab'
 import RegisterUnitOfStudyTab from './RegisterUnitOfStudy'
 import ProfileTab from './ProfileTab'
-import { useGlobalContext } from '../../global/GlobalContext'
-import sendRequest from '../../helpers/requestHelpers'
-import { RequestMethods } from '../../global/Constants'
+import { useGlobalContext } from '../../../global/GlobalContext'
+import sendRequest from '../../../helpers/requestHelpers'
+import { RequestMethods } from '../../../global/Constants'
 
 const { TabPane } = Tabs
 
@@ -60,9 +60,11 @@ export default function ProfileAndEducationProgram() {
 
     const value = {
         studentInfomation,
+        setStudentInformation,
         student: studentInfomation.student,
         educationProgram: studentInfomation.educationProgram,
         institude: studentInfomation.institude,
+        registerUnitOfStudies: studentInfomation.registerUnitOfStudies
     }
     return (
         <StudentContext.Provider value={value}>

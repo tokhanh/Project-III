@@ -10,8 +10,6 @@ router.post('/register-unit-of-study', StudentController.registerUnitOfStudy)
 
 router.get('/class', StudentController.viewClass)
 
-router.get('/registered-class', StudentController.viewRegisteredClass)
-
-router.post('/registered-class', StudentController.registerClass)
+router.post('/register-class', StudentController.registerClass)
 
 module.exports = router
