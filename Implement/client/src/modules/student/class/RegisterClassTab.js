@@ -58,15 +58,19 @@ export default function RegisterClassTab() {
         const registerClass = validationClassCode(classCode)
         if (!registerClass) {
             message.error('Class code not existed!')
-        } else {
-            checkIsExistedCode(listRegisterClass, registerClass._id)
-                ? message.error('Duplicate class code!')
-                : checkSubjectCodeIsExistedInListRegisterUnit(registerClass)
-                ? setListRegisterClass([...listRegisterClass, registerClass])
-                : message.error(
-                      `Unit of Study "${registerClass.subjectName}" haven't register yet!`
-                  )
+            return
         }
+        if (checkIsExistedCode(listRegisterClass, registerClass._id)) {
+            message.error('Duplicate class code!')
+            return
+        }
+        if (!checkSubjectCodeIsExistedInListRegisterUnit(registerClass)) {
+            message.error(
+                `Unit of Study "${registerClass.subjectName}" haven't register yet!`
+            )
+            return
+        }
+        setListRegisterClass([...listRegisterClass, registerClass])
     }
 
     const handleRemoveClass = (id) => {

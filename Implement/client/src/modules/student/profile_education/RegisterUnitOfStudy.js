@@ -72,13 +72,16 @@ export default function RegisterUnitOfStudyTab() {
         const subject = validationCode(code)
         if (!subject) {
             message.error('Subject code is not existed!')
-        } else {
-            checkIsExistedCode(listRegister, subject._id)
-                ? message.error('Subject code duplicate!')
-                : !checkLimitedCredit(listRegister, subject)
-                ? message.error('Limited credit !')
-                : setListRegister([...listRegister, subject])
+            return
         }
+        if (checkIsExistedCode(listRegister, subject._id)) {
+            message.error('Subject code duplicate!')
+            return
+        }
+        if (!checkLimitedCredit(listRegister, subject)) {
+            message.error('Limited credit !')
+        }
+        setListRegister([...listRegister, subject])
     }
 
     const handleRemoveSubject = (id) => {
