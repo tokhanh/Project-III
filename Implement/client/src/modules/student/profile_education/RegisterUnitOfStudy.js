@@ -80,6 +80,7 @@ export default function RegisterUnitOfStudyTab() {
         }
         if (!checkLimitedCredit(listRegister, subject)) {
             message.error('Limited credit !')
+            return
         }
         setListRegister([...listRegister, subject])
     }
