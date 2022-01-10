@@ -2,10 +2,13 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainLayout from '../layout/MainLayout'
 import Page404 from '../layout/Page404'
+import ClassManagement from '../modules/education_management/ClassManagement'
+import RegisterUnitManagement from '../modules/education_management/RegisterUnitManagement'
 import Class from '../modules/student/class/Class'
 import ProfileAndEducationProgram from '../modules/student/profile_education/ProfileAndEducationProgram'
 import Home from '../modules/users/Home'
 import Login from '../modules/users/Login'
+import AdminRoute from './AdminRoute'
 import PrivateRoute from './PrivateRoute'
 
 export default function Routers() {
@@ -26,7 +29,9 @@ export default function Routers() {
                     element={
                         <PrivateRoute
                             component={
-                                <MainLayout component={<ProfileAndEducationProgram />} />
+                                <MainLayout
+                                    component={<ProfileAndEducationProgram />}
+                                />
                             }
                         />
                     }
@@ -35,8 +40,30 @@ export default function Routers() {
                     path="/class"
                     element={
                         <PrivateRoute
+                            component={<MainLayout component={<Class />} />}
+                        />
+                    }
+                />
+                <Route
+                    path="/register-unit-of-study-management"
+                    element={
+                        <AdminRoute
                             component={
-                                <MainLayout component={<Class />} />
+                                <MainLayout
+                                    component={<RegisterUnitManagement />}
+                                />
+                            }
+                        />
+                    }
+                />
+                <Route
+                    path="/class-management"
+                    element={
+                        <AdminRoute
+                            component={
+                                <MainLayout
+                                    component={<ClassManagement />}
+                                />
                             }
                         />
                     }
