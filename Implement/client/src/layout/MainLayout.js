@@ -7,10 +7,15 @@ import { useGlobalContext } from '../global/GlobalContext'
 
 export default function MainLayout({ component }) {
     const { logout } = useGlobalContext()
+
     const linkList = [
         { path: '/', to: 'Home' },
         { path: '/profile-and-education-program', to: 'Profile & Education' },
         { path: '/class', to: 'Class' },
+    ]
+
+    const adminLinkList = [
+
     ]
 
     const DropdownMenu = (

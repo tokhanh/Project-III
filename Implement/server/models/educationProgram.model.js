@@ -10,6 +10,10 @@ const educationProgramSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    maxLimitOfCredit: {
+        type: Number,
+        required: true
+    },
     subjects: [
         {
             type: mongoose.Types.ObjectId,

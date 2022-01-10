@@ -22,6 +22,14 @@ const generateUser = async () => {
 }
 
 const generateData = async () => {
+    const admin = new User({
+        _id: '61bc89e654002066071c7f62',
+        username: 'admin',
+        email: 'admin_mng@gmail.com',
+        password: '1'
+    })
+    await admin.save()
+
     const accountStudent1 = new User({
         username: 'TVK20183933',
         email: 'kto2303@gmail.com',
