@@ -23,6 +23,10 @@ const validateEducationProgram = (data) => {
     })
     return educationProgramSchema.validate(data)
 }
+/**Studen controller */
+router.get('/list-student', TrainingDepartmentController.getAllStudents)
+router.post('/remove-student-of-class', TrainingDepartmentController.removeStudentsOfClass)
+
 /*Subject controller*/
 
 router.get('/subject', TrainingDepartmentController.getListSubjects)

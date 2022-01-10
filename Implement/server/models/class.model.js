@@ -6,6 +6,10 @@ const classModel = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    semester: {
+        type: String,
+        required: true
+    },
     time: {
         day: {
             type: Number,

@@ -1,6 +1,30 @@
 const Class = require('../../models/class.model')
 const EducationProgram = require('../../models/educationProgram.model')
 const Subject = require('../../models/subject.model')
+const Student = require('../../models/student.model')
+
+/*Student service */
+const getAllStudents = async (params = {}) => {
+    const {} = params
+    const keySearch = {}
+    const listAllStudents = await Student.find(keySearch)
+    return listAllStudents
+}
+
+const removeStudentsOfClass = async (params = {}) => {
+    const { sid, currentClass } = params
+    const result = await Class.findOneAndUpdate(
+        {
+            _id: currentClass,
+        },
+        {
+            $pull: {
+                students: sid,
+            },
+        }
+    )
+    return 'success fully'
+}
 
 /*Subject service*/
 const getListSubjects = async (params = {}) => {
@@ -66,7 +90,10 @@ const getListClass = async (params = {}) => {
     let listClass = await Class.find({ ...keySeach }).populate([
         {
             path: 'subjectId',
-        }
+        },
+        {
+            path: 'students',
+        },
     ])
     if (codeKey) {
         const reg = new RegExp(`${codeKey}`, 'gi')
@@ -84,6 +111,7 @@ const createNewClass = async (data = {}) => {
 }
 
 const updateClass = async (data = {}) => {
+    console.log('is running')
     const updatedClass = await Class.updateMany({ ...data })
     return updatedClass
 }
@@ -126,6 +154,8 @@ const deleteEducationProgram = async (data = {}) => {
 }
 
 module.exports = {
+    getAllStudents,
+    removeStudentsOfClass,
     getListSubjects,
     createNewSubject,
     updateSubject,

@@ -79,6 +79,7 @@ const updateListRegisterUnit = async (data = {}) => {
 
 const updateClass = async (data = {}) => {
     const { sid, inClass } = data
+    console.log(sid, inClass)
     await Class.updateMany(
         {},
         {

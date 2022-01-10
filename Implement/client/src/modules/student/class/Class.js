@@ -92,7 +92,7 @@ export default function Class() {
     }, [])
 
     const value = { listClass, fetchData, setListClass, student: student?.student?.[0], user}
-
+    console.log(listClass)
     return (
         <ClassContext.Provider value={value}>
             <Tabs defaultActiveKey="1" type="card" style={{ margin: '10px' }}>

@@ -1,9 +1,35 @@
 const createHttpError = require("http-errors")
 const TrainingService = require('./training-department.service')
 
+const getAllStudents = async (req, res, next) => {
+    try {
+        const data = await TrainingService.getAllStudents()
+        return res.status(200).send({
+            success: true,
+            message: "get_data_success",
+            content: data
+        })
+    } catch (err) {
+        next(createHttpError.BadRequest(err))
+    }
+}
+
+const removeStudentsOfClass = async (req, res, next) => {
+    try {
+        const updateData = req.body
+        const data = await TrainingService.removeStudentsOfClass(updateData)
+        return res.status(200).send({
+            success: true,
+            message: "get_data_success",
+            content: data
+        })
+    } catch (err) {
+        next(createHttpError.BadRequest(err))
+    }
+}
+
 const getListSubjects = async (req, res, next) => {
     try {
-        console.log(req.query)
         const data = await TrainingService.getListSubjects(req.body)
         return res.status(200).send({
             success: true,
@@ -162,6 +188,8 @@ const deleteEducationProgram = async (req, res, next) => {
 }
 
 module.exports = {
+    getAllStudents,
+    removeStudentsOfClass,
     getListSubjects,
     createNewSubject,
     deleteSubject,
