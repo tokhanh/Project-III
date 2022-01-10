@@ -11,7 +11,7 @@ export default function RegisterClassTab() {
 
     const registeredClass = listClass
         .map((_class) =>
-            _class.students.find((i) => i === student._id)
+            _class.students.find((i) => i._id === student._id)
                 ? { ..._class, key: _class.code }
                 : undefined
         )
