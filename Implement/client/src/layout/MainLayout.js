@@ -1,22 +1,30 @@
 import { Dropdown, Layout, Menu } from 'antd'
 import { Content, Footer, Header } from 'antd/lib/layout/layout'
 import Sider from 'antd/lib/layout/Sider'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useGlobalContext } from '../global/GlobalContext'
 
 export default function MainLayout({ component }) {
-    const { logout } = useGlobalContext()
+    const { logout, isAdmin } = useGlobalContext()
 
-    const linkList = [
+    const studentLinkList = [
         { path: '/', to: 'Home' },
         { path: '/profile-and-education-program', to: 'Profile & Education' },
         { path: '/class', to: 'Class' },
     ]
 
     const adminLinkList = [
-
+        { path: '/register-unit-of-study-management', to: 'List Register Unit' },
+        { path: '/class-management', to: 'Class Management' },
+        { path: '/education-management', to: 'Education Management' },
     ]
+    const [linkList, setLinkList] = useState([])
+
+    useEffect(() => {
+        setLinkList(isAdmin ? adminLinkList : studentLinkList)
+        /* eslint-disable-next-line */
+    }, [isAdmin])
 
     const DropdownMenu = (
         <Menu>

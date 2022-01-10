@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import sendRequest from '../helpers/requestHelpers'
 import { RequestMethods } from './Constants'
 
@@ -10,6 +10,7 @@ export const useGlobalContext = () => {
 
 export default function GlobalContextProvider({ children }) {
     const [user, setUser] = useState(localStorage.getItem('uid'))
+    const [isAdmin, setIsAdmin] = useState(user === '61bc89e654002066071c7f62')
 
     function setCurrentUser(user) {
         setUser(user)
@@ -35,10 +36,12 @@ export default function GlobalContextProvider({ children }) {
 
     const value = {
         user,
+        isAdmin,
         login,
         logout,
-        setCurrentUser
+        setCurrentUser,
     }
+    
     return (
         <GlobalContext.Provider value={value}>
             {children}
