@@ -1,32 +1,40 @@
 import React, { useEffect, useState } from 'react'
-import { Input, Form, Space, Table, List, Select } from 'antd'
+import { Input, Form, Select, Button } from 'antd'
 import styled from 'styled-components'
 
 const { Option } = Select
 
-export default function EditClassForm({ data }) {
+export default function EditClassForm(props) {
+    const { data, handleCancelEditModal, updateClassService } = props
+    console.log(data)
     const [currentClass, setCurrentClass] = useState({
+        _id: data._id,
         code: data.code,
         subject: data.subject,
+        subjectName: data.subjectName,
         subjectCode: data.subjectCode,
         time: data.time,
         position: data.position,
         maximum: data.maximum,
         students: data.students,
         defaultTime: data.defaultTime,
+        semester: data.semester,
     })
 
     useEffect(() => {
         setCurrentClass({
             ...currentClass,
+            _id: data._id,
             code: data.code,
             subject: data.subject,
+            subjectName: data.subjectName,
             subjectCode: data.subjectCode,
             time: data.time,
             position: data.position,
             maximum: data.maximum,
             students: data.students,
             defaultTime: data.defaultTime,
+            semester: data.semester,
         })
     }, [JSON.stringify(data)])
 
@@ -39,7 +47,7 @@ export default function EditClassForm({ data }) {
     const onChangeMaximumOfStudent = (e) => {
         setCurrentClass({
             ...currentClass,
-            maximum: e.target.value,
+            maximum: Number(e.target.value),
         })
     }
 
@@ -48,7 +56,7 @@ export default function EditClassForm({ data }) {
             ...currentClass,
             defaultTime: {
                 ...currentClass.defaultTime,
-                day: value,
+                day: Number(value),
             },
         })
     }
@@ -58,31 +66,9 @@ export default function EditClassForm({ data }) {
             ...currentClass,
             defaultTime: {
                 ...currentClass.defaultTime,
-                shift: value,
+                shift: Number(value),
             },
         })
-    }
-
-    const convertDate = (data) => {
-        switch (data) {
-            case 2: {
-                return 'Monday'
-            }
-            case 3: {
-                return 'Tuesday'
-            }
-            case 4: {
-                return 'Wednesday'
-            }
-            case 5: {
-                return 'Thursday'
-            }
-            case 6: {
-                return 'Friday'
-            }
-            default:
-                break
-        }
     }
 
     return (
@@ -91,7 +77,7 @@ export default function EditClassForm({ data }) {
                 <Label>Class Code</Label>
                 <Input disabled={true} value={currentClass.code} />
                 <Label>Subject</Label>
-                <Input disabled={true} value={currentClass.subject} />
+                <Input disabled={true} value={currentClass.subjectName} />
                 <Label>Subject Code</Label>
                 <Input disabled={true} value={currentClass.subjectCode} />
                 <Label>Time</Label>
@@ -99,25 +85,25 @@ export default function EditClassForm({ data }) {
                     <Label>Day: </Label>
                     <Select
                         style={{ width: 150 }}
-                        defaultValue={convertDate(currentClass.defaultTime.day)}
+                        value={Number(currentClass.defaultTime.day)}
                         onChange={onChangeDayValue}
                     >
-                        <Option value="2">Monday</Option>
-                        <Option value="3">Tuesday</Option>
-                        <Option value="4">Wednesday</Option>
-                        <Option value="5">Thursday</Option>
-                        <Option value="6">Friday</Option>
+                        <Option value={2}>Monday</Option>
+                        <Option value={3}>Tuesday</Option>
+                        <Option value={4}>Wednesday</Option>
+                        <Option value={5}>Thursday</Option>
+                        <Option value={6}>Friday</Option>
                     </Select>
                     <Label> Shift: </Label>
                     <Select
                         style={{ width: 150 }}
-                        defaultValue={currentClass.defaultTime.shift}
+                        value={Number(currentClass.defaultTime.shift)}
                         onChange={onChangeShiftValue}
                     >
-                        <Option value="1">1</Option>
-                        <Option value="2">2</Option>
-                        <Option value="3">3</Option>
-                        <Option value="4">4</Option>
+                        <Option value={1}>1</Option>
+                        <Option value={2}>2</Option>
+                        <Option value={3}>3</Option>
+                        <Option value={4}>4</Option>
                     </Select>
                 </div>
                 <Label>Position</Label>
@@ -132,15 +118,29 @@ export default function EditClassForm({ data }) {
                     type={'number'}
                 />
             </Form>
-            <List
-                itemLayout="horizontal"
-                dataSource={[{ name: 'to khanh' }, { name: 'khanh to' }]}
-                renderItem={(item) => (
-                    <List.Item>
-                        <List.Item.Meta name={item.name} />
-                    </List.Item>
-                )}
-            />
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginTop: '20px',
+                }}
+            >
+                <Button
+                    style={{ margin: '5px' }}
+                    onClick={handleCancelEditModal}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    style={{ margin: '5px' }}
+                    onClick={(_) => {
+                        updateClassService(currentClass)
+                        handleCancelEditModal()
+                    }}
+                >
+                    Save
+                </Button>
+            </div>
         </>
     )
 }
