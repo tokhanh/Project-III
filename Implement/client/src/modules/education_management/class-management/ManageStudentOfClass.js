@@ -3,31 +3,21 @@ import {
     Space,
     Table,
     Typography,
-    Input,
     Button,
     Modal,
     message,
     Select,
 } from 'antd'
-import sendRequest from '../../../helpers/requestHelpers'
-import { RequestMethods } from '../../../global/Constants'
 
 const { Text } = Typography
 const { Option } = Select
 
 export default function ManageStudentOfClass(props) {
-    const { data, listAllStudent } = props
+    const { data, listAllStudent, updateClassService } = props
     const [listStudent, setListStudent] = useState(data.students)
-    const [searchValue, setSearchValue] = useState('')
+
     const [currentStudent, setCurrentStudent] = useState({})
     const [currentAddStudent, setCurrentAddStudent] = useState('')
-
-    const handleSearch = () => {
-        const pattern = new RegExp(searchValue, 'gi')
-        setListStudent(
-            data.students.filter((i) => pattern.test(i.studentId.toString()))
-        )
-    }
 
     const onSelectStudent = (value) => {
         setCurrentAddStudent(value)
@@ -37,29 +27,8 @@ export default function ManageStudentOfClass(props) {
         setListStudent(data.students)
     }, [JSON.stringify(data)])
 
-    const handleRemoveStudent = async () => {
-        const currentClass = data._id
-        const sid = currentStudent._id
-        const response = await sendRequest({
-            method: RequestMethods.POST,
-            url: 'http://localhost:4001/v1/training-department/remove-student-of-class',
-            data: {
-                currentClass: currentClass,
-                sid: sid,
-            },
-        })
-        if (response) {
-            setListStudent(
-                data.students.filter(
-                    (student) =>
-                        student._id.toString() !== currentStudent._id.toString()
-                )
-            )
-            message.success('Remove student successfully!')
-        } else {
-            message.error('Remove student failed!')
-        }
-    }
+
+    
     const columns = [
         {
             title: 'Student ID',
@@ -101,8 +70,20 @@ export default function ManageStudentOfClass(props) {
         setIsOpenConfirmModal(false)
     }
 
+    const handleRemoveStudent = async () => {
+        const _listStudent = listStudent.filter(i => i.studentId.toString() != currentStudent.studentId.toString())
+        const _updateClassData = {
+            ...data,
+            students: _listStudent
+        } 
+        updateClassService(_updateClassData)
+        setListStudent(_listStudent)
+    }
+
     const validateExistedStudent = () => {
-        const student = data.students.find(i => i._id.toString() === currentAddStudent.toString())
+        const student = listStudent.find(
+            (i) => i._id.toString() === currentAddStudent.toString()
+        )
         return student
     }
 
@@ -111,10 +92,16 @@ export default function ManageStudentOfClass(props) {
             message.error('Student already in class list!')
             return
         } else {
-            message.success('Add student success!')
+            let newStudent = listAllStudent.find(i => i._id.toString() == currentAddStudent.toString())
+            const newListStudent = [...listStudent, newStudent]
+            setListStudent(newListStudent)
+            let _updateClassData = {
+                ...data,
+                students: newListStudent
+            }
+            updateClassService(_updateClassData)
         }
     }
-
 
     return (
         <>
@@ -125,15 +112,15 @@ export default function ManageStudentOfClass(props) {
                     justifyContent: 'space-between',
                 }}
             >
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                {/* <div style={{ display: 'flex', flexDirection: 'row' }}>
                     <Input
-                        placeholder="Search student..."
+                        placeholder="Nhập mã số sinh viên..."
                         onChange={(e) => setSearchValue(e.target.value)}
                     />
                     <Button type="primary" onClick={handleSearch}>
-                        Search
+                        Tìm kiếm
                     </Button>
-                </div>
+                </div> */}
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                     <Select
                         style={{ width: 250 }}
@@ -153,10 +140,15 @@ export default function ManageStudentOfClass(props) {
                             </Option>
                         ))}
                     </Select>
-                    <Button type="primary" onClick={handleSubmitAddStudent}>Add Student</Button>
+                    <Button type="primary" onClick={handleSubmitAddStudent}>
+                        Thêm
+                    </Button>
                 </div>
             </div>
-            <Table columns={columns} dataSource={listStudent.map(i => ({...i, key: i._id}))} />
+            <Table
+                columns={columns}
+                dataSource={listStudent.map((i) => ({ ...i, key: i._id }))}
+            />
             <Modal
                 visible={isOpenConfirmModal}
                 onOk={handleSubmit}

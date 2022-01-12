@@ -17,7 +17,7 @@ import EditClassForm from '../class-management/EditClassForm'
 import ManageStudentOfClass from '../class-management/ManageStudentOfClass'
 
 const { Search } = Input
-const { Text } = Typography
+const { Text, Title } = Typography
 const { Option } = Select
 
 export default function ClassManagement() {
@@ -27,9 +27,11 @@ export default function ClassManagement() {
     {
         /* eslint-disable-next-line */
     }
-    const [semester, setSemester] = useState('20202')
+    const [listTimestamp, setListTimeStamp] = useState([])
+    const [semester, setSemester] = useState(null)
     const [listClassInSemester, setListClassInSemester] = useState([])
     function handleChangeSemester(value) {
+        setSemester(value)
         setListClassInSemester(
             listClass.filter((i) => i.semester.toString() === value.toString())
         )
@@ -42,8 +44,8 @@ export default function ClassManagement() {
         },
         {
             title: 'Subject',
-            dataIndex: 'subject',
-            key: 'subject',
+            dataIndex: 'subjectName',
+            key: 'subjectName',
         },
         {
             title: 'Semester',
@@ -109,7 +111,9 @@ export default function ClassManagement() {
     // const [isConfirmDeleteModal, setIsConfirmDeleteModal] = useState(false)
 
     const [currentEditClassData, setCurrentEditClassData] = useState({})
-    const [currentStudentOfClassData, setCurrentStudentOfClassData] = useState({})
+    const [currentStudentOfClassData, setCurrentStudentOfClassData] = useState(
+        {}
+    )
 
     const handleOpenCreateClassModal = () => {
         setIsOpenCreateClassModal(true)
@@ -165,45 +169,45 @@ export default function ClassManagement() {
             data: data,
         })
         if (response) {
-            setListClass(
-                response.data.content.map((i) => ({
-                    _id: i._id,
-                    key: i.code,
-                    code: i.code,
-                    subject: i.subjectId.name,
-                    subjectCode: i.subjectId.code,
-                    time: `${convertDate(i.time.day)} - Shift: ${i.time.shift}`,
-                    position: i.position,
-                    students: i.students,
-                    numberRegisteredStudent: i.students.length,
-                    maximum: i.maximum,
-                    semester: i.semester,
-                }))
-            )
+            const _data = response.data.content.map((i) => ({
+                _id: i._id,
+                key: i.code,
+                code: i.code,
+                subject: i.subjectId,
+                subjectName: i.subjectId.name,
+                subjectCode: i.subjectId.code,
+                time: `${convertDate(i.time.day)} - Shift: ${i.time.shift}`,
+                position: i.position,
+                students: i.students,
+                numberRegisteredStudent: i.students.length,
+                maximum: i.maximum,
+                semester: i.semester,
+                defaultTime: i.time,
+            }))
+            setListClass(_data)
             setListClassInSemester(
-                response.data.content
-                    .map((i) => ({
-                        _id: i._id,
-                        key: i.code,
-                        code: i.code,
-                        subject: i.subjectId.name,
-                        subjectCode: i.subjectId.code,
-                        defaultTime: i.time,
-                        time: `${convertDate(i.time.day)} - Shift: ${
-                            i.time.shift
-                        }`,
-                        position: i.position,
-                        students: i.students,
-                        numberRegisteredStudent: i.students.length,
-                        maximum: i.maximum,
-                        semester: i.semester,
-                    }))
-                    .filter(
-                        (i) => i.semester.toString() === semester.toString()
-                    )
+                _data.filter((i) => i.semester.toString() == semester)
             )
         } else {
             message.error('Get open class failed!')
+        }
+    }
+    const fetchTimestamp = async (data = {}) => {
+        const response = await sendRequest({
+            url: 'http://localhost:4001/v1/training-department/timestamp',
+            method: RequestMethods.GET,
+            data: data,
+        })
+        if (response) {
+            const content = response.data.content.sort(
+                (a, b) => b.semester - a.semester
+            )
+            setListTimeStamp(
+                //set list sortable semester
+                content
+            )
+        } else {
+            message.error('Lấy danh sách các kỳ thất bại!')
         }
     }
 
@@ -217,6 +221,20 @@ export default function ClassManagement() {
             setListAllStudent(response.data.content)
         } else {
             message.error('Get list student failed!')
+        }
+    }
+
+    const updateClassService = async (data = {}) => {
+        const response = await sendRequest({
+            url: 'http://localhost:4001/v1/training-department/class',
+            method: RequestMethods.PUT,
+            data: data,
+        })
+        if (response) {
+            fetchData()
+            message.success('Update data success!')
+        } else {
+            message.error('Update data failed!')
         }
     }
 
@@ -234,6 +252,7 @@ export default function ClassManagement() {
 
     useEffect(() => {
         return (() => {
+            fetchTimestamp()
             fetchStudentData()
             fetchData()
         })()
@@ -251,15 +270,25 @@ export default function ClassManagement() {
                     justifyContent: 'space-between',
                 }}
             >
-                <Select
-                    style={{ width: 150 }}
-                    onChange={handleChangeSemester}
-                    defaultValue={semester}
+                <div>
+                    <Title level={5}>Chọn kỳ học</Title>
+                    <Select
+                        style={{ width: 150 }}
+                        onChange={handleChangeSemester}
+                    >
+                        {listTimestamp.map((i) => (
+                            <Option key={i._id} value={i.semester}>
+                                {i.semester}
+                            </Option>
+                        ))}
+                    </Select>
+                </div>
+                <Button
+                    onClick={handleOpenCreateClassModal}
+                    disabled={!semester}
                 >
-                    <Option value="20202">20202</Option>
-                    <Option value="20201">20201</Option>
-                </Select>
-                <Button onClick={handleOpenCreateClassModal}>Add Class</Button>
+                    Thêm lớp
+                </Button>
             </div>
             <div
                 style={{
@@ -280,7 +309,7 @@ export default function ClassManagement() {
                 </Tooltip>
             </div>
             <Table
-                dataSource={listClassInSemester}
+                dataSource={[...listClassInSemester]}
                 columns={columns}
                 bordered
                 title={() => ''}
@@ -293,20 +322,28 @@ export default function ClassManagement() {
                 title="Edit Class"
                 okText="Change"
                 cancelText="Cancel"
+                footer={null}
                 width={1000}
             >
-                <EditClassForm data={currentEditClassData} />
+                <EditClassForm
+                    data={currentEditClassData}
+                    handleCancelEditModal={handleCancelEditModal}
+                    updateClassService={updateClassService}
+                />
             </Modal>
             <Modal
                 visible={isOpenCreateClassModal}
                 // onOk={handleSubmit}
                 onCancel={handleCancelCreateClassModal}
-                title="Edit Class"
-                okText="Create"
-                cancelText="Cancel"
+                title="Tạo mới lớp học"
+                footer={null}
                 width={1000}
             >
-                <CreateClassForm />
+                <CreateClassForm
+                    semester={semester}
+                    listClassInSemester={listClassInSemester}
+                    handleCancelCreateClassModal={handleCancelCreateClassModal}
+                />
             </Modal>
             <Modal
                 visible={isOpenStudentOfClassModal}
@@ -315,10 +352,14 @@ export default function ClassManagement() {
                 title="Student Management"
                 okText="Update"
                 cancelText="Cancel"
-                okButtonProps={{style: {display: 'none'}}}
+                okButtonProps={{ style: { display: 'none' } }}
                 width={1000}
             >
-                <ManageStudentOfClass data={currentStudentOfClassData} updated={fetchData} listAllStudent={listAllStudent}/>
+                <ManageStudentOfClass
+                    data={currentStudentOfClassData}
+                    updateClassService={updateClassService}
+                    listAllStudent={listAllStudent}
+                />
             </Modal>
         </>
     )
