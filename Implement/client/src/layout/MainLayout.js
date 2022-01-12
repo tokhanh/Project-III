@@ -15,7 +15,7 @@ export default function MainLayout({ component }) {
     ]
 
     const adminLinkList = [
-        { path: '/register-unit-of-study-management', to: 'Kế hoạch học tập' },
+        { path: '/register-unit-of-study-management', to: 'Quản lý kế hoạch học tập' },
         { path: '/class-management', to: 'Quản lý lớp học' },
         // { path: '/education-management', to: 'Education Management' },
     ]
