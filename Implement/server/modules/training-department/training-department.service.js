@@ -162,10 +162,10 @@ const createNewClass = async (data = {}) => {
         subjectId: data.subjectId,
         students: [],
         semester: data.semester,
-        maximum: data.maximum
+        maximum: data.maximum,
     }
     const _newClass = new Class({
-        ...newClass
+        ...newClass,
     })
     await _newClass.save()
     return 'success'
@@ -184,7 +184,7 @@ const updateClass = async (data = {}) => {
         semester: data.semester,
         maximum: data.maximum,
     }
-    
+
     const result = await Class.findOneAndUpdate(
         {
             _id: data._id,
@@ -196,14 +196,14 @@ const updateClass = async (data = {}) => {
         },
         { new: true }
     )
-    return 'true'
+    return result
 }
 
 const deleteClass = async (data = {}) => {
-    const deletedClass = await Class.delete({ ...data })
-    return deletedClass
+    const { _id } = data
+    const result = await Class.deleteOne({ _id: _id })
+    return result
 }
-
 /*Education Program Service */
 const getEducationProgram = async (params = {}) => {
     const {} = params

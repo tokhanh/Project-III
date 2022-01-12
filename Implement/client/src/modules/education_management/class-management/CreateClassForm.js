@@ -13,7 +13,6 @@ export default function CreateClassForm(props) {
         handleCancelCreateClassModal,
         refreshData,
     } = props
-    console.log(listClassInSemester)
     const [newClassData, setNewClassData] = useState({
         code: '',
         time: {
@@ -121,8 +120,18 @@ export default function CreateClassForm(props) {
         return isExistedCode
     }
     const validateDuplicateTime = () => {
-        const listClassInTheSamePlace = listClassInSemester.filter(i => i.position.trim().toString() === newClassData.position.trim().toString())
-        let existedTime = listClassInTheSamePlace.find(i => (i.defaultTime.day.toString() == newClassData.time.day.toString() && i.defaultTime.shift.toString() == newClassData.time.shift.toString()))
+        const listClassInTheSamePlace = listClassInSemester.filter(
+            (i) =>
+                i.position.trim().toString() ===
+                newClassData.position.trim().toString()
+        )
+        let existedTime = listClassInTheSamePlace.find(
+            (i) =>
+                i.defaultTime.day.toString() ==
+                    newClassData.time.day.toString() &&
+                i.defaultTime.shift.toString() ==
+                    newClassData.time.shift.toString()
+        )
         return existedTime
     }
 
@@ -136,9 +145,11 @@ export default function CreateClassForm(props) {
             message.error('Mã lớp học đã tồn tại!')
             return
         }
-        let duplicateClass = validateDuplicateTime() 
+        let duplicateClass = validateDuplicateTime()
         if (duplicateClass) {
-            message.error(`Trùng thời khóa biểu và địa điểm của lớp: ${duplicateClass.subjectName}- Mã lớp: ${duplicateClass.code}`)
+            message.error(
+                `Trùng thời khóa biểu và địa điểm của lớp: ${duplicateClass.subjectName}- Mã lớp: ${duplicateClass.code}`
+            )
             return
         }
         setIsOpenConfirmModal(true)
@@ -156,10 +167,10 @@ export default function CreateClassForm(props) {
     useEffect(() => {
         setNewClassData({
             ...newClassData,
-            semester: semester
+            semester: semester,
         })
     }, [semester])
-    console.log(newClassData.semester)
+
     return (
         <div>
             <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
@@ -190,11 +201,11 @@ export default function CreateClassForm(props) {
                 <div>
                     <Label>Thứ: </Label>
                     <Select style={{ width: 150 }} onChange={onChangeDateTime}>
-                        <Option value={2}>Monday</Option>
-                        <Option value={3}>Tuesday</Option>
-                        <Option value={4}>Wednesday</Option>
-                        <Option value={5}>Thursday</Option>
-                        <Option value={6}>Friday</Option>
+                        <Option value={2}>Thứ 2</Option>
+                        <Option value={3}>Thứ 3</Option>
+                        <Option value={4}>Thứ 4</Option>
+                        <Option value={5}>Thứ 5</Option>
+                        <Option value={6}>Thứ 6</Option>
                     </Select>
                     <Label> Ca: </Label>
                     <Select style={{ width: 150 }} onChange={onChangeShiftTime}>

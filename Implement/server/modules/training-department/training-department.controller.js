@@ -163,7 +163,7 @@ const updateClass = async (req, res, next) => {
 
 const deleteClass = async (req, res, next) => {
     try {
-        const data = "await deleteClass(data)"
+        const data = await TrainingService.deleteClass(req.body)
         return res.status(200).send({
             success: true,
             message: "get_data_success",

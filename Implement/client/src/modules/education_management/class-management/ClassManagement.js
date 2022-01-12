@@ -38,47 +38,47 @@ export default function ClassManagement() {
     }
     const columns = [
         {
-            title: 'Code',
+            title: 'Mã lớp',
             dataIndex: 'code',
             key: 'code',
         },
         {
-            title: 'Subject',
+            title: 'Môn học',
             dataIndex: 'subjectName',
             key: 'subjectName',
         },
         {
-            title: 'Semester',
+            title: 'Kỳ học',
             dataIndex: 'semester',
             key: 'semester',
         },
         {
-            title: 'Subject Code',
+            title: 'Mã môn học',
             dataIndex: 'subjectCode',
             key: 'subjectCode',
         },
         {
-            title: 'Time',
+            title: 'Thời gian',
             dataIndex: 'time',
             key: 'time',
         },
         {
-            title: 'Position',
+            title: 'Địa điểm ',
             dataIndex: 'position',
             key: 'position',
         },
         {
-            title: 'Number Registered',
+            title: 'Số lượng đăng ký ',
             dataIndex: 'numberRegisteredStudent',
             key: 'numberRegisteredStudent',
         },
         {
-            title: 'Maximum quantity',
+            title: 'Số lượng sinh viên tối đa',
             dataIndex: 'maximum',
             key: 'maximum',
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             dataIndex: 'action',
             render: (text, record) => (
                 <Space size="middle">
@@ -95,7 +95,7 @@ export default function ClassManagement() {
                         </Text>
                     </a>
                     {/* eslint-disable-next-line */}
-                    <a onClick={() => handleRemoveClass(record._id)}>
+                    <a onClick={() => handleOpenRemoveClassModal(record)}>
                         <Text type="danger">
                             <i className="fas fa-trash"></i>
                         </Text>
@@ -138,28 +138,19 @@ export default function ClassManagement() {
         setIsOpenStudentOfClassModal(false)
     }
 
-    const handleRemoveClass = (id) => {}
+    const [isOpenRemoveClassModal, setIsOpenRemoveClassModal] = useState(false)
+    const [currentRemoveClass, setCurrentRemoveClass] = useState(null)
+    const handleOpenRemoveClassModal = (record) => {
+        setCurrentRemoveClass(record)
+        setIsOpenRemoveClassModal(true)
+    }
+    const handelCancelRemoveClassModal = () => {
+        setIsOpenRemoveClassModal(false)
+    }
 
-    const convertDate = (data) => {
-        switch (data) {
-            case 2: {
-                return 'Monday'
-            }
-            case 3: {
-                return 'Tuesday'
-            }
-            case 4: {
-                return 'Wednesday'
-            }
-            case 5: {
-                return 'Thursday'
-            }
-            case 6: {
-                return 'Friday'
-            }
-            default:
-                break
-        }
+    const handleRemoveClass = () => {
+        deleteClassService(currentRemoveClass)
+        handelCancelRemoveClassModal()
     }
 
     const fetchData = async (data = {}) => {
@@ -176,7 +167,7 @@ export default function ClassManagement() {
                 subject: i.subjectId,
                 subjectName: i.subjectId.name,
                 subjectCode: i.subjectId.code,
-                time: `${convertDate(i.time.day)} - Shift: ${i.time.shift}`,
+                time: `Thứ ${i.time.day} - Ca: ${i.time.shift}`,
                 position: i.position,
                 students: i.students,
                 numberRegisteredStudent: i.students.length,
@@ -220,7 +211,7 @@ export default function ClassManagement() {
         if (response) {
             setListAllStudent(response.data.content)
         } else {
-            message.error('Get list student failed!')
+            message.error('Lấy danh sách sinh viên thất bại!')
         }
     }
 
@@ -232,9 +223,23 @@ export default function ClassManagement() {
         })
         if (response) {
             fetchData()
-            message.success('Update data success!')
+            message.success('Cập nhật thông tin lớp học thành công!')
         } else {
-            message.error('Update data failed!')
+            message.error('Cập nhật thông tin lớp học thất bại!')
+        }
+    }
+
+    const deleteClassService = async (data = {}) => {
+        const response = await sendRequest({
+            url: 'http://localhost:4001/v1/training-department/class',
+            method: RequestMethods.DELETE,
+            data: data,
+        })
+        if (response) {
+            fetchData()
+            message.success('Hủy lớp thành công!')
+        } else {
+            message.error('Hủy lớp thất bại!')
         }
     }
 
@@ -317,11 +322,8 @@ export default function ClassManagement() {
             />
             <Modal
                 visible={isOpenEditModal}
-                // onOk={handleSubmit}
                 onCancel={handleCancelEditModal}
-                title="Edit Class"
-                okText="Change"
-                cancelText="Cancel"
+                title="Chỉnh sửa thông tin lớp"
                 footer={null}
                 width={1000}
             >
@@ -333,7 +335,6 @@ export default function ClassManagement() {
             </Modal>
             <Modal
                 visible={isOpenCreateClassModal}
-                // onOk={handleSubmit}
                 onCancel={handleCancelCreateClassModal}
                 title="Tạo mới lớp học"
                 footer={null}
@@ -348,11 +349,9 @@ export default function ClassManagement() {
             </Modal>
             <Modal
                 visible={isOpenStudentOfClassModal}
-                // onOk={handleSubmit}
                 onCancel={handleCancelStudentOfClassModal}
-                title="Student Management"
-                okText="Update"
-                cancelText="Cancel"
+                title="Quản lý sinh viên trong lớp"
+                cancelText="Hủy bỏ"
                 okButtonProps={{ style: { display: 'none' } }}
                 width={1000}
             >
@@ -361,6 +360,16 @@ export default function ClassManagement() {
                     updateClassService={updateClassService}
                     listAllStudent={listAllStudent}
                 />
+            </Modal>
+            <Modal
+                title="Hủy lớp"
+                visible={isOpenRemoveClassModal}
+                onCancel={handelCancelRemoveClassModal}
+                onOk={handleRemoveClass}
+            >
+                Xác nhận hủy lớp {currentRemoveClass?.code} (
+                {currentRemoveClass?.subjectCode} -{' '}
+                {currentRemoveClass?.subjectName})?
             </Modal>
         </>
     )

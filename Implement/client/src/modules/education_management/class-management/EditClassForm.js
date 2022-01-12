@@ -6,7 +6,6 @@ const { Option } = Select
 
 export default function EditClassForm(props) {
     const { data, handleCancelEditModal, updateClassService } = props
-    console.log(data)
     const [currentClass, setCurrentClass] = useState({
         _id: data._id,
         code: data.code,
@@ -74,27 +73,27 @@ export default function EditClassForm(props) {
     return (
         <>
             <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                <Label>Class Code</Label>
+                <Label>Mã lớp</Label>
                 <Input disabled={true} value={currentClass.code} />
-                <Label>Subject</Label>
+                <Label>Môn học</Label>
                 <Input disabled={true} value={currentClass.subjectName} />
-                <Label>Subject Code</Label>
+                <Label>Mã môn học</Label>
                 <Input disabled={true} value={currentClass.subjectCode} />
-                <Label>Time</Label>
+                <Label>Thời gian</Label>
                 <div>
-                    <Label>Day: </Label>
+                    <Label>Thứ: </Label>
                     <Select
                         style={{ width: 150 }}
                         value={Number(currentClass.defaultTime.day)}
                         onChange={onChangeDayValue}
                     >
-                        <Option value={2}>Monday</Option>
-                        <Option value={3}>Tuesday</Option>
-                        <Option value={4}>Wednesday</Option>
-                        <Option value={5}>Thursday</Option>
-                        <Option value={6}>Friday</Option>
+                        <Option value={2}>Thứ 2</Option>
+                        <Option value={3}>Thứ 3</Option>
+                        <Option value={4}>Thứ 4</Option>
+                        <Option value={5}>Thứ 5</Option>
+                        <Option value={6}>Thứ 6</Option>
                     </Select>
-                    <Label> Shift: </Label>
+                    <Label> Ca: </Label>
                     <Select
                         style={{ width: 150 }}
                         value={Number(currentClass.defaultTime.shift)}
@@ -106,12 +105,12 @@ export default function EditClassForm(props) {
                         <Option value={4}>4</Option>
                     </Select>
                 </div>
-                <Label>Position</Label>
+                <Label>Địa điểm</Label>
                 <Input
                     value={currentClass.position}
                     onChange={onChangePosition}
                 />
-                <Label>Maximum number of students</Label>
+                <Label>Số lượng sinh viên tối đa</Label>
                 <Input
                     value={currentClass.maximum}
                     onChange={onChangeMaximumOfStudent}
@@ -129,7 +128,7 @@ export default function EditClassForm(props) {
                     style={{ margin: '5px' }}
                     onClick={handleCancelEditModal}
                 >
-                    Cancel
+                    Hủy bỏ
                 </Button>
                 <Button
                     style={{ margin: '5px' }}
@@ -138,7 +137,7 @@ export default function EditClassForm(props) {
                         handleCancelEditModal()
                     }}
                 >
-                    Save
+                    Lưu
                 </Button>
             </div>
         </>
