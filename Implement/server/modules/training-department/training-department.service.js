@@ -159,9 +159,31 @@ const createNewClass = async (data = {}) => {
 }
 
 const updateClass = async (data = {}) => {
-    console.log('is running')
-    const updatedClass = await Class.updateMany({ ...data })
-    return updatedClass
+    const updateClassData = {
+        code: data.code,
+        time: {
+            day: data.defaultTime.day,
+            shift: data.defaultTime.shift,
+        },
+        position: data.position,
+        subjectId: data.subject._id,
+        students: data.students.map((i) => i._id),
+        semester: data.semester,
+        maximum: data.maximum,
+    }
+    
+    const result = await Class.findOneAndUpdate(
+        {
+            _id: data._id,
+        },
+        {
+            $set: {
+                ...updateClassData,
+            },
+        },
+        { new: true }
+    )
+    return 'true'
 }
 
 const deleteClass = async (data = {}) => {

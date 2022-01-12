@@ -2,7 +2,6 @@ const Student = require('../../models/student.model')
 const User = require('../../models/user.model')
 const mongoose = require('mongoose')
 const Class = require('../../models/class.model')
-const TrainingService = require('../training-department/training-department.service')
 
 const getStudentProfile = async (params = {}) => {
     const { id } = params

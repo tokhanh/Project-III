@@ -150,7 +150,7 @@ const createNewClass = async (req, res, next) => {
 
 const updateClass = async (req, res, next) => {
     try {
-        const data = "await updateClass(data)"
+        const data = await TrainingService.updateClass(req.body)
         return res.status(200).send({
             success: true,
             message: "get_data_success",

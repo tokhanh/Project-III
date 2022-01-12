@@ -4,7 +4,6 @@ const classModel = new mongoose.Schema({
     code: {
         type: Number,
         required: true,
-        unique: true,
     },
     semester: {
         type: String,
