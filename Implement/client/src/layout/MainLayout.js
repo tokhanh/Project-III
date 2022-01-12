@@ -15,9 +15,9 @@ export default function MainLayout({ component }) {
     ]
 
     const adminLinkList = [
-        { path: '/register-unit-of-study-management', to: 'List Register Unit' },
-        { path: '/class-management', to: 'Class Management' },
-        { path: '/education-management', to: 'Education Management' },
+        { path: '/register-unit-of-study-management', to: 'Kế hoạch học tập' },
+        { path: '/class-management', to: 'Quản lý lớp học' },
+        // { path: '/education-management', to: 'Education Management' },
     ]
     const [linkList, setLinkList] = useState([])
 
