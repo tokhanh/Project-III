@@ -6,18 +6,26 @@ const timeStampSchema = new mongoose.Schema({
         required: true,
     },
     registerUnitOfStudyTime: {
-        startDate: {
+        startTime: {
             type: Date,
         },
-        endDate: {
+        endTime: {
             type: Date,
         },
     },
-    registerClassTime: {
-        startDate: {
+    registerPriotyClassTime: {
+        startTime: {
             type: Date,
         },
-        endDate: {
+        endTime: {
+            type: Date,
+        },
+    },
+    registerAdjustedClassTime: {
+        startTime: {
+            type: Date,
+        },
+        endTime: {
             type: Date,
         },
     },
@@ -25,4 +33,4 @@ const timeStampSchema = new mongoose.Schema({
 
 const Timestamp = mongoose.model('Timestamp', timeStampSchema)
 
-module.export = Timestamp
+module.exports = Timestamp

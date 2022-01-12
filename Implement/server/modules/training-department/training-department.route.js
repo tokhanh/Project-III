@@ -23,7 +23,12 @@ const validateEducationProgram = (data) => {
     })
     return educationProgramSchema.validate(data)
 }
-/**Studen controller */
+
+/**Timestamp */
+router.get('/timestamp', TrainingDepartmentController.getTimestamp)
+router.post('/timestamp', TrainingDepartmentController.createTimestamp)
+router.put('/timestamp', TrainingDepartmentController.updateTimestamp)
+/**Student controller */
 router.get('/list-student', TrainingDepartmentController.getAllStudents)
 router.post('/remove-student-of-class', TrainingDepartmentController.removeStudentsOfClass)
 

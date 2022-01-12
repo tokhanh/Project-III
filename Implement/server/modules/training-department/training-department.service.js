@@ -2,8 +2,56 @@ const Class = require('../../models/class.model')
 const EducationProgram = require('../../models/educationProgram.model')
 const Subject = require('../../models/subject.model')
 const Student = require('../../models/student.model')
+const Timestamp = require('../../models/timestamp.model')
+const moment = require('moment')
 
 /*Student service */
+const getTimestamp = async () => {
+    const listTimestamp = await Timestamp.find()
+    return listTimestamp
+}
+
+const createTimestamp = async () => {
+    return 'true'
+}
+
+const updateTimestamp = async (data = {}) => {
+    const formatDate = 'DD/MM/YYYY HH:mm:ss'
+    const timestamp = {
+        semester: data.semester,
+        registerUnitOfStudyTime: {
+            startTime: moment(data.startTimeRegisterUnit, formatDate),
+            endTime: moment(data.endTimeRegisterUnit, formatDate),
+        },
+        registerPriotyClassTime: {
+            startTime: moment(
+                data.startTimeRegisterPriotyClassTime,
+                formatDate
+            ),
+            endTime: moment(data.endTimeRegisterPriotyClassTime, formatDate),
+        },
+        registerAdjustedClassTime: {
+            startTime: moment(
+                data.startTimeRegisterAdjustedClassTime,
+                formatDate
+            ),
+            endTime: moment(data.endTimeRegisterAdjustedClassTime, formatDate),
+        },
+    }
+    const result = await Timestamp.findOneAndUpdate(
+        {
+            semester: data.semester,
+        },
+        {
+            $set: {
+                ...timestamp,
+            },
+        },
+        { new: true }
+    )
+    return 'done'
+}
+
 const getAllStudents = async (params = {}) => {
     const {} = params
     const keySearch = {}
@@ -154,6 +202,9 @@ const deleteEducationProgram = async (data = {}) => {
 }
 
 module.exports = {
+    getTimestamp,
+    createTimestamp,
+    updateTimestamp,
     getAllStudents,
     removeStudentsOfClass,
     getListSubjects,

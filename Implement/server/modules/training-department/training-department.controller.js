@@ -1,6 +1,45 @@
 const createHttpError = require("http-errors")
 const TrainingService = require('./training-department.service')
 
+const getTimestamp = async (req, res, next) => {
+    try {
+        const data = await TrainingService.getTimestamp()
+        return res.status(200).send({
+            success: true,
+            message: "get_data_success",
+            content: data
+        })
+    } catch (err) {
+        next(createHttpError.BadRequest(err))
+    }
+}
+
+const createTimestamp = async (req, res, next) => {
+    try {
+        const data = await TrainingService.createTimestamp()
+        return res.status(200).send({
+            success: true,
+            message: "get_data_success",
+            content: data
+        })
+    } catch (err) {
+        next(createHttpError.BadRequest(err))
+    }
+}
+
+const updateTimestamp = async (req, res, next) => {
+    try {
+        const data = await TrainingService.updateTimestamp(req.body)
+        return res.status(200).send({
+            success: true,
+            message: "get_data_success",
+            content: data
+        })
+    } catch (err) {
+        next(createHttpError.BadRequest(err))
+    }
+}
+
 const getAllStudents = async (req, res, next) => {
     try {
         const data = await TrainingService.getAllStudents()
@@ -188,6 +227,9 @@ const deleteEducationProgram = async (req, res, next) => {
 }
 
 module.exports = {
+    getTimestamp,
+    createTimestamp,
+    updateTimestamp,
     getAllStudents,
     removeStudentsOfClass,
     getListSubjects,
