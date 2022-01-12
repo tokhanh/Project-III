@@ -152,10 +152,23 @@ const getListClass = async (params = {}) => {
     return listClass
 }
 const createNewClass = async (data = {}) => {
-    const newClass = await new Class({
-        ...data,
-    }).save()
-    return newClass
+    const newClass = {
+        code: data.code,
+        time: {
+            day: data.time.day,
+            shift: data.time.shift,
+        },
+        position: data.position,
+        subjectId: data.subjectId,
+        students: [],
+        semester: data.semester,
+        maximum: data.maximum
+    }
+    const _newClass = new Class({
+        ...newClass
+    })
+    await _newClass.save()
+    return 'success'
 }
 
 const updateClass = async (data = {}) => {

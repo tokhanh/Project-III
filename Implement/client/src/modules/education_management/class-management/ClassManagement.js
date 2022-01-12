@@ -343,6 +343,7 @@ export default function ClassManagement() {
                     semester={semester}
                     listClassInSemester={listClassInSemester}
                     handleCancelCreateClassModal={handleCancelCreateClassModal}
+                    refreshData={fetchData}
                 />
             </Modal>
             <Modal
