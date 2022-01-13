@@ -71,7 +71,7 @@ export default function ManageStudentOfClass(props) {
     }
 
     const handleRemoveStudent = async () => {
-        const _listStudent = listStudent.filter(i => i.studentId.toString() != currentStudent.studentId.toString())
+        const _listStudent = listStudent.filter(i => i.studentId.toString() !== currentStudent.studentId.toString())
         const _updateClassData = {
             ...data,
             students: _listStudent
@@ -92,7 +92,7 @@ export default function ManageStudentOfClass(props) {
             message.error('Student already in class list!')
             return
         } else {
-            let newStudent = listAllStudent.find(i => i._id.toString() == currentAddStudent.toString())
+            let newStudent = listAllStudent.find(i => i._id.toString() === currentAddStudent.toString())
             const newListStudent = [...listStudent, newStudent]
             setListStudent(newListStudent)
             let _updateClassData = {

@@ -6,7 +6,6 @@ import {
     Select,
     Space,
     Table,
-    Tooltip,
     Typography,
 } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -23,7 +22,6 @@ const { Option } = Select
 export default function ClassManagement() {
     const [listClass, setListClass] = useState([])
     const [listAllStudent, setListAllStudent] = useState([])
-    const [keySeach, setKeySearch] = useState('')
     {
         /* eslint-disable-next-line */
     }
@@ -243,17 +241,32 @@ export default function ClassManagement() {
         }
     }
 
-    const handleRefreshData = () => {
-        fetchData()
+    const [classCodeKeySearch, setClassCodeKeySearch] = useState('')
+    const [subjectCodeKeySearch, setSubjectCodeKeySearch] = useState('')
+    const handleChangeSubjectCodeKeySearch = (e) => setSubjectCodeKeySearch(e.target.value)
+    const handleChangeClassCodeKeySearch = (e) => setClassCodeKeySearch(e.target.value)
+
+    const handleSubjectCodeSearch = () => {
+        let keyCode = new RegExp(`${subjectCodeKeySearch}`, 'gi')
+        setListClassInSemester(
+            listClass
+                .filter(
+                    (i) => i.semester.toString() === semester?.toString()
+                )
+                .filter((i) => i.subjectCode.toString().match(keyCode))
+        )
+    }
+    const handleClassCodeSearch = () => {
+        let keyCode = new RegExp(`${classCodeKeySearch}`, 'gi')
+        setListClassInSemester(
+            listClass
+                .filter(
+                    (i) => i.semester.toString() === semester?.toString()
+                )
+                .filter((i) => i.code.toString().match(keyCode))
+        )
     }
 
-    const handleChangeKeySearch = (e) => setKeySearch(e.target.value)
-
-    const handleSearch = () => {
-        fetchData({
-            codeKey: keySeach,
-        })
-    }
 
     useEffect(() => {
         return (() => {
@@ -298,20 +311,19 @@ export default function ClassManagement() {
             <div
                 style={{
                     display: 'flex',
-                    flexDirection: 'row-reverse',
                     padding: '10px',
                 }}
             >
                 <Search
-                    placeholder="Seacrh Subject Code"
-                    onSearch={handleSearch}
-                    onChange={handleChangeKeySearch}
+                    placeholder="Tìm kiếm mã lớp"
+                    onSearch={handleClassCodeSearch}
+                    onChange={handleChangeClassCodeKeySearch}
                 />
-                <Tooltip title="Refresh">
-                    <Button onClick={handleRefreshData}>
-                        <i className="fas fa-sync-alt"></i>
-                    </Button>
-                </Tooltip>
+                <Search
+                    placeholder="Tìm kiếm mã môn học"
+                    onSearch={handleSubjectCodeSearch}
+                    onChange={handleChangeSubjectCodeKeySearch}
+                />
             </div>
             <Table
                 dataSource={[...listClassInSemester]}

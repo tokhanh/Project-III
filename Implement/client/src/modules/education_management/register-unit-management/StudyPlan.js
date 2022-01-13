@@ -18,7 +18,7 @@ const { Title } = Typography
 const { RangePicker } = DatePicker
 const { Option } = Select
 
-const formatDate = 'DD/MM/YY HH:mm:ss'
+const formatDate = 'DD/MM/YYYY HH:mm:ss'
 
 export default function StudyPlan() {
     const [listTimestamp, setListTimeStamp] = useState([])
@@ -102,7 +102,7 @@ export default function StudyPlan() {
 
     const handleChangeSemester = (value) => {
         const _timestamp = listTimestamp.find(
-            (i) => i.semester.toString() == value
+            (i) => i.semester.toString() === value.toString()
         )
         setCurrentTimeStamp({
             semester: _timestamp?.semester,
@@ -226,7 +226,7 @@ export default function StudyPlan() {
             <Block>
                 <Title level={5}>Thời điểm đăng ký học phần</Title>
                 <RangePicker
-                    disabled={currentTimeStamp.semester.length == 0}
+                    disabled={currentTimeStamp.semester.length === 0}
                     format={formatDate}
                     showTime
                     onChange={handleChangeRegisterUnitTime}
@@ -243,7 +243,7 @@ export default function StudyPlan() {
             <Block>
                 <Title level={5}>Thời điểm đăng ký lớp học ưu tiên</Title>
                 <RangePicker
-                    disabled={currentTimeStamp.semester.length == 0}
+                    disabled={currentTimeStamp.semester.length === 0}
                     showTime
                     format={formatDate}
                     onChange={handleChangeRegisterPriotyClassTime}
@@ -260,7 +260,7 @@ export default function StudyPlan() {
             <Block>
                 <Title level={5}>Thời điểm đăng ký lớp học điều chỉnh</Title>
                 <RangePicker
-                    disabled={currentTimeStamp.semester.length == 0}
+                    disabled={currentTimeStamp.semester.length === 0}
                     showTime
                     format={formatDate}
                     onChange={handleChangeRegisterAdjustedClassTime}
