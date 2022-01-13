@@ -64,6 +64,10 @@ export default function StudyPlan() {
     }
 
     const handleUpdateTime = async (data = {}) => {
+        if (!isValidTime()) {
+            message.error('Thời gian không được để trống !')
+            return
+        }
         const response = await sendRequest({
             url: 'http://localhost:4001/v1/training-department/timestamp',
             method: RequestMethods.PUT,
@@ -151,6 +155,44 @@ export default function StudyPlan() {
         return fetchTimestamp()
     }, [])
 
+    const _startDateUnitOfStudy = moment(
+        currentTimeStamp.startTimeRegisterUnit,
+        formatDate
+    )
+    const _endDateUnitOfStudy = moment(
+        currentTimeStamp.endTimeRegisterUnit,
+        formatDate
+    )
+
+    const _startDateRegisterPrioty = moment(
+        currentTimeStamp.startTimeRegisterPriotyClassTime,
+        formatDate
+    )
+    const _endDateRegisterPrioty = moment(
+        currentTimeStamp.endTimeRegisterPriotyClassTime,
+        formatDate
+    )
+
+    const _startDateRegisterAdjusted = moment(
+        currentTimeStamp.startTimeRegisterAdjustedClassTime,
+        formatDate
+    )
+
+    const _endDateRegisterAdjusted = moment(
+        currentTimeStamp.endTimeRegisterAdjustedClassTime,
+        formatDate
+    )
+    const isValidTime = () => {
+        return (
+            _startDateUnitOfStudy.isValid() &&
+            _endDateUnitOfStudy.isValid() &&
+            _startDateRegisterPrioty.isValid() &&
+            _endDateRegisterPrioty.isValid() &&
+            _startDateRegisterAdjusted.isValid() &&
+            _endDateRegisterAdjusted.isValid()
+        )
+    }
+
     return (
         <Space
             style={{
@@ -188,6 +230,14 @@ export default function StudyPlan() {
                     format={formatDate}
                     showTime
                     onChange={handleChangeRegisterUnitTime}
+                    value={[
+                        _startDateUnitOfStudy.isValid()
+                            ? _startDateUnitOfStudy
+                            : null,
+                        _endDateUnitOfStudy.isValid()
+                            ? _endDateUnitOfStudy
+                            : null,
+                    ]}
                 />
             </Block>
             <Block>
@@ -197,6 +247,14 @@ export default function StudyPlan() {
                     showTime
                     format={formatDate}
                     onChange={handleChangeRegisterPriotyClassTime}
+                    value={[
+                        _startDateRegisterPrioty.isValid()
+                            ? _startDateRegisterPrioty
+                            : null,
+                        _endDateRegisterPrioty.isValid()
+                            ? _endDateRegisterPrioty
+                            : null,
+                    ]}
                 />
             </Block>
             <Block>
@@ -206,6 +264,14 @@ export default function StudyPlan() {
                     showTime
                     format={formatDate}
                     onChange={handleChangeRegisterAdjustedClassTime}
+                    value={[
+                        _startDateRegisterAdjusted.isValid()
+                            ? _startDateRegisterAdjusted
+                            : null,
+                        _endDateRegisterAdjusted.isValid()
+                            ? _endDateRegisterAdjusted
+                            : null,
+                    ]}
                 />
             </Block>
             <Block>
