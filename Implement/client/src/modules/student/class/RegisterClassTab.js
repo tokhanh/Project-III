@@ -105,7 +105,7 @@ export default function RegisterClassTab(props) {
 
     const handleAddClass = () => {
         const registerClass = validationClassCode(classCode)
-        
+
         if (!registerClass) {
             message.error('Mã lớp không tồn tại!')
             return
@@ -280,7 +280,7 @@ export default function RegisterClassTab(props) {
                 <Button
                     type="primary"
                     onClick={handleAddClass}
-                    //disabled={!validateTimeToRegisterClass()}
+                    disabled={!validateTimeToRegisterClass()}
                 >
                     Thêm
                 </Button>
