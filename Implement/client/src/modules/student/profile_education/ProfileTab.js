@@ -12,12 +12,12 @@ export default function ProfileTab() {
                 <Avatar size={128} />
             </div>
             <div>
-                <h2>Student Information</h2>
-                <h3>Student name: {student.name}</h3>
+                <h2>Thông tin sinh viên</h2>
+                <h3>Họ và tên: {student.name}</h3>
                 <h3>ID: {student.studentId}</h3>
-                <h3>Year Of Admission: {student.yearOfAdmission}</h3>
-                <h3>Status: {student.status}</h3>
-                <h3>Institude: {institude.name}</h3>
+                <h3>Năm nhập học: {student.yearOfAdmission}</h3>
+                <h3>Trạng thái học tập: {student.status}</h3>
+                <h3>Khoa / viện đào tạo: {institude.name}</h3>
             </div>
         </StudentWrapper>
     )

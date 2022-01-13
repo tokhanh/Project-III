@@ -57,16 +57,16 @@ export default function RegisterClassTab() {
     const handleAddClass = () => {
         const registerClass = validationClassCode(classCode)
         if (!registerClass) {
-            message.error('Class code not existed!')
+            message.error('Mã lớp không tồn tại!')
             return
         }
         if (checkIsExistedCode(listRegisterClass, registerClass._id)) {
-            message.error('Duplicate class code!')
+            message.error('Trùng mã lớp!')
             return
         }
         if (!checkSubjectCodeIsExistedInListRegisterUnit(registerClass)) {
             message.error(
-                `Unit of Study "${registerClass.subjectName}" haven't register yet!`
+                `Chưa đăng ký học phần "${registerClass.subjectName}"!`
             )
             return
         }
@@ -78,27 +78,32 @@ export default function RegisterClassTab() {
     }
     const columns = [
         {
-            title: 'Class Code',
+            title: 'Mã lớp',
             dataIndex: 'code',
             key: 'code',
         },
         {
-            title: 'Subject',
+            title: 'Lớp',
             dataIndex: 'subjectName',
             key: 'subjectName',
         },
         {
-            title: 'Time',
+            title: 'Học kỳ',
+            dataIndex: 'semester',
+            key: 'semester',
+        },
+        {
+            title: 'Thời gian',
             dataIndex: 'time',
             key: 'time',
         },
         {
-            title: 'Position',
+            title: 'Địa điểm',
             dataIndex: 'position',
             key: 'position',
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             dataIndex: 'action',
             render: (text, record) => (
                 <Space size="middle">
@@ -121,10 +126,10 @@ export default function RegisterClassTab() {
             },
         })
         if (response) {
-            message.success('Register class success fully!!')
+            message.success('Đăng ký lớp thành công!')
             fetchData()
         } else {
-            message.error('Register class failed!')
+            message.error('Đăng ký lớp thất bại!')
         }
         setIsOpenModal(false)
     }
@@ -143,11 +148,11 @@ export default function RegisterClassTab() {
             <Input.Group compact>
                 <Input
                     style={{ width: '200px' }}
-                    placeholder="Enter a class code"
+                    placeholder="Nhập mã lớp"
                     onChange={handleChangeCode}
                 />
                 <Button type="primary" onClick={handleAddClass}>
-                    Add Class
+                    Thêm
                 </Button>
             </Input.Group>
             <Table columns={columns} dataSource={listRegisterClass} />
@@ -164,17 +169,17 @@ export default function RegisterClassTab() {
                     disabled={checkIsChangeRegisterClass()}
                     onClick={confirm}
                 >
-                    Submit
+                    Đăng ký
                 </Button>
                 <Modal
                     visible={isOpenModal}
                     onOk={handleSubmit}
                     onCancel={cancelModal}
-                    title="Confirm"
-                    okText="Confirm"
-                    cancelText="Cancel"
+                    title="Xác nhận"
+                    okText="Đồng ý"
+                    cancelText="Hủy bỏ"
                 >
-                    Register Class ?
+                    Đăng ký các lớp học này?
                 </Modal>
             </Space>
         </div>

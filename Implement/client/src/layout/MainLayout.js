@@ -9,9 +9,9 @@ export default function MainLayout({ component }) {
     const { logout, isAdmin } = useGlobalContext()
 
     const studentLinkList = [
-        { path: '/', to: 'Home' },
-        { path: '/profile-and-education-program', to: 'Profile & Education' },
-        { path: '/class', to: 'Class' },
+        { path: '/', to: 'Trang chủ' },
+        { path: '/profile-and-education-program', to: 'Hồ sơ' },
+        { path: '/class', to: 'Lớp học' },
     ]
 
     const adminLinkList = [

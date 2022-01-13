@@ -10,37 +10,42 @@ export default function OpenClassTab() {
 
     const columns = [
         {
-            title: 'Code',
+            title: 'Mã lớp',
             dataIndex: 'code',
             key: 'code',
         },
         {
-            title: 'Subject',
+            title: 'Môn học',
             dataIndex: 'subjectName',
             key: 'subjectName',
         },
         {
-            title: 'Subject Code',
+            title: 'Mã môn học',
             dataIndex: 'subjectCode',
             key: 'subjectCode',
         },
         {
-            title: 'Time',
+            title: 'Học kỳ',
+            dataIndex: 'semester',
+            key: 'semester',
+        },
+        {
+            title: 'Thời gian',
             dataIndex: 'time',
             key: 'time',
         },
         {
-            title: 'Position',
+            title: 'Địa điểm',
             dataIndex: 'position',
             key: 'position',
         },
         {
-            title: 'Number Registered',
+            title: 'Đã đăng ký',
             dataIndex: 'numberRegisteredStudent',
             key: 'numberRegisteredStudent',
         },
         {
-            title: 'Maximum quantity',
+            title: 'Số lượng sinh viên tối đa',
             dataIndex: 'maximum',
             key: 'maximum',
         },
@@ -68,7 +73,7 @@ export default function OpenClassTab() {
                 }}
             >
                 <Search
-                    placeholder="Seacrh Subject Code"
+                    placeholder="Nhập mã môn học"
                     onSearch={handleSearch}
                     onChange={handleChangeKeySearch}
                 />

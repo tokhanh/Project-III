@@ -71,15 +71,15 @@ export default function RegisterUnitOfStudyTab() {
     const handleAddUnitOfStudy = () => {
         const subject = validationCode(code)
         if (!subject) {
-            message.error('Subject code is not existed!')
+            message.error('Mã học phần không tồn tại!')
             return
         }
         if (checkIsExistedCode(listRegister, subject._id)) {
-            message.error('Subject code duplicate!')
+            message.error('Trùng mã học phần!')
             return
         }
         if (!checkLimitedCredit(listRegister, subject)) {
-            message.error('Limited credit !')
+            message.error('Giới hạn tín chỉ tối đa !!')
             return
         }
         setListRegister([...listRegister, subject])
@@ -91,22 +91,22 @@ export default function RegisterUnitOfStudyTab() {
 
     const columns = [
         {
-            title: 'Code',
+            title: 'Mã học phần',
             dataIndex: 'code',
             key: 'code',
         },
         {
-            title: 'Name',
+            title: 'Tên học phần',
             dataIndex: 'name',
             key: 'name',
         },
         {
-            title: 'Credit',
+            title: 'Tín chỉ',
             dataIndex: 'credit',
             key: 'credit',
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             key: 'action',
             render: (text, record) => (
                 <Space size="middle">
@@ -141,9 +141,9 @@ export default function RegisterUnitOfStudyTab() {
                 registerUnitOfStudies:
                     response.data.content[0]?.student[0]?.registerUnitOfStudies,
             })
-            message.success('Register unit of study success!')
+            message.success('Đăng ký học phần thành công!')
         } else {
-            message.error('Register unit of study failed!')
+            message.error('Đăng ký học phần thất bại!')
         }
         setIsOpenModal(false)
     }
@@ -160,11 +160,11 @@ export default function RegisterUnitOfStudyTab() {
             <Input.Group compact>
                 <Input
                     style={{ width: '200px' }}
-                    placeholder="Enter a subject code"
+                    placeholder="Nhập mã học phần"
                     onChange={handleChangeCode}
                 />
                 <Button type="primary" onClick={handleAddUnitOfStudy}>
-                    Add Unit Of Study
+                    Thêm
                 </Button>
             </Input.Group>
             <Table
@@ -184,17 +184,17 @@ export default function RegisterUnitOfStudyTab() {
                     disabled={checkChangeListRegisterSubject()}
                     onClick={confirmModal}
                 >
-                    Submit
+                    Đăng ký
                 </Button>
                 <Modal
                     visible={isOpenModal}
                     onOk={handleSubmit}
                     onCancel={cancelModal}
-                    title="Confirm"
-                    okText="Confirm"
-                    cancelText="Cancel"
+                    title="Xác nhận"
+                    okText="Đồng ý"
+                    cancelText="Hủy bỏ"
                 >
-                    Register unit of study ?
+                    Xác nhận đăng ký học phần ?
                 </Modal>
             </Space>
         </div>

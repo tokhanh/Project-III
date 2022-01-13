@@ -17,29 +17,7 @@ export default function Class() {
     const [listClass, setListClass] = useState([])
     const [student, setStudent] = useState({})
 
-    const convertDate = (data) => {
-        switch (data) {
-            case 2: {
-                return 'Monday'
-            }
-            case 3: {
-                return 'Tuesday'
-            }
-            case 4: {
-                return 'Wednesday'
-            }
-            case 5: {
-                return 'Thursday'
-            }
-            case 6: {
-                return 'Friday'
-            }
-            default:
-                break
-        }
-    }
-
-    const fetchStudentData = async(data = {}) => {
+    const fetchStudentData = async (data = {}) => {
         const response = await sendRequest({
             method: RequestMethods.GET,
             url: 'http://localhost:4001/v1/student/student-profile',
@@ -69,8 +47,8 @@ export default function Class() {
                     subjectName: i.subjectId.name,
                     subjectId: i.subjectId._id,
                     subjectCode: i.subjectId.code,
-                    time: `${convertDate(i.time.day)} - Shift: ${i.time.shift}`,
-                    time_number: {
+                    time: `Thứ ${i.time.day}- Ca: ${i.time.shift}`,
+                    defaultTime: {
                         day: i.time.day,
                         shift: i.time.shift,
                     },
@@ -78,6 +56,7 @@ export default function Class() {
                     students: i.students,
                     numberRegisteredStudent: i.students.length,
                     maximum: i.maximum,
+                    semester: i.semester,
                 }))
             )
         } else {
@@ -91,15 +70,21 @@ export default function Class() {
         // eslint-disable-next-line
     }, [])
 
-    const value = { listClass, fetchData, setListClass, student: student?.student?.[0], user}
-    console.log(listClass)
+    const value = {
+        listClass,
+        fetchData,
+        setListClass,
+        student: student?.student?.[0],
+        user,
+    }
+
     return (
         <ClassContext.Provider value={value}>
             <Tabs defaultActiveKey="1" type="card" style={{ margin: '10px' }}>
-                <TabPane tab="Open Class" key="1">
+                <TabPane tab="Danh sách lớp đang mở" key="1">
                     <OpenClassTab />
                 </TabPane>
-                <TabPane tab="Register Class" key="2">
+                <TabPane tab="Đăng ký lớp" key="2">
                     <RegisterClassTab />
                 </TabPane>
             </Tabs>

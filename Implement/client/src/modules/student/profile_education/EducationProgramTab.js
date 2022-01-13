@@ -15,17 +15,17 @@ export default function EducationProgramTab() {
     )
     const columns = [
         {
-            title: 'Code',
+            title: 'Mã học phần',
             dataIndex: 'code',
             key: 'code',
         },
         {
-            title: 'Name',
+            title: 'Tên học phần',
             dataIndex: 'name',
             key: 'name',
         },
         {
-            title: 'Credit',
+            title: 'Tín chỉ',
             dataIndex: 'credit',
             key: 'credit',
         },

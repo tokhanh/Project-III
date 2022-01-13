@@ -48,7 +48,7 @@ export default function ProfileAndEducationProgram() {
             })
             setLoading(false)
         } else {
-            message.error('Get student data failed')
+            message.error('Lấy dữ liệu sinh viên thất bại !')
             setLoading(false)
         }
     }
@@ -74,13 +74,13 @@ export default function ProfileAndEducationProgram() {
                     type="card"
                     style={{ margin: '10px' }}
                 >
-                    <TabPane tab="Profile" key="1">
+                    <TabPane tab="Hồ sơ" key="1">
                         <ProfileTab />
                     </TabPane>
-                    <TabPane tab="Education Program" key="2">
+                    <TabPane tab="Chương trình đào tạo" key="2">
                         <EducationProgramTab />
                     </TabPane>
-                    <TabPane tab="Register Unit Of Study" key="3">
+                    <TabPane tab="Đăng ký học phần " key="3">
                         <RegisterUnitOfStudyTab />
                     </TabPane>
                 </Tabs>
