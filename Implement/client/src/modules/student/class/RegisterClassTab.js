@@ -1,12 +1,25 @@
-import { Button, Input, message, Modal, Space, Table, Typography } from 'antd'
+import {
+    Button,
+    Input,
+    message,
+    Modal,
+    Select,
+    Space,
+    Table,
+    Typography,
+} from 'antd'
+import moment from 'moment'
 import React, { useState } from 'react'
 import { RequestMethods } from '../../../global/Constants'
 import sendRequest from '../../../helpers/requestHelpers'
 import { useClassContext } from './Class'
 
-const { Text } = Typography
+const { Option } = Select
+const { Text, Title } = Typography
+const formatDate = 'DD/MM/YYYY HH:mm:ss'
 
-export default function RegisterClassTab() {
+export default function RegisterClassTab(props) {
+    const { listSemester } = props
     const { listClass, student, fetchData } = useClassContext()
 
     const registeredClass = listClass
@@ -54,6 +67,34 @@ export default function RegisterClassTab() {
         return registerUnitOfStudies.find((i) => i === registerClass.subjectId)
     }
 
+    const validatePriotyTime = () => {
+        let _csemester = listSemester.find(
+            (i) => i?.semester?.toString() === currentSemester?.toString()
+        )
+        let timePrioty = _csemester?.registerPriotyClassTime
+        if (timePrioty) {
+            let startTime = moment(
+                formatDateFunc(timePrioty?.startTime),
+                formatDate
+            )
+            let endTime = moment(
+                formatDateFunc(timePrioty?.endTime),
+                formatDate
+            )
+            let now = moment(formatDateFunc(new Date()), formatDate)
+            if (!startTime.isValid() || !endTime.isValid()) {
+                return false
+            } else {
+                if (startTime.isBefore(now) && endTime.isAfter(now)) {
+                    return true
+                }
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+
     const handleAddClass = () => {
         const registerClass = validationClassCode(classCode)
         if (!registerClass) {
@@ -64,11 +105,13 @@ export default function RegisterClassTab() {
             message.error('Trùng mã lớp!')
             return
         }
-        if (!checkSubjectCodeIsExistedInListRegisterUnit(registerClass)) {
-            message.error(
-                `Chưa đăng ký học phần "${registerClass.subjectName}"!`
-            )
-            return
+        if (validatePriotyTime()) {
+            if (!checkSubjectCodeIsExistedInListRegisterUnit(registerClass)) {
+                message.error(
+                    `Chưa đăng ký học phần "${registerClass.subjectName}"!`
+                )
+                return
+            }
         }
         setListRegisterClass([...listRegisterClass, registerClass])
     }
@@ -108,7 +151,13 @@ export default function RegisterClassTab() {
             render: (text, record) => (
                 <Space size="middle">
                     {/* eslint-disable-next-line */}
-                    <a onClick={() => handleRemoveClass(record._id)}>
+                    <a
+                        onClick={() =>
+                            !validateTimeToRegisterClass()
+                                ? {}
+                                : handleRemoveClass(record._id)
+                        }
+                    >
                         <Text type="danger">Remove</Text>
                     </a>
                 </Space>
@@ -142,16 +191,80 @@ export default function RegisterClassTab() {
     const cancelModal = () => {
         setIsOpenModal(false)
     }
+    const [currentSemester, setCurrentSemester] = useState(null)
+    const onChangeSemester = (value) => {
+        setCurrentSemester(value)
+    }
+
+    const formatDateFunc = (date) => {
+        const _date = new Date(date)
+        const day = _date.getDate()
+        const month = _date.getMonth() + 1
+        const year = _date.getFullYear()
+        const hour = _date.getHours()
+        const minutes = _date.getMinutes()
+        const seconds = _date.getSeconds()
+        return `${day}/${month}/${year} ${hour}:${minutes}:${seconds}`
+    }
+    const validateTimeToRegisterClass = () => {
+        let _csemester = listSemester.find(
+            (i) => i?.semester?.toString() === currentSemester?.toString()
+        )
+        let timePrioty = _csemester?.registerPriotyClassTime
+        let timeAdjusted = _csemester?.registerAdjustedClassTime
+        if (timePrioty && timeAdjusted) {
+            let startTime = moment(
+                formatDateFunc(timePrioty?.startTime),
+                formatDate
+            )
+            let endTime = moment(
+                formatDateFunc(timeAdjusted?.endTime),
+                formatDate
+            )
+            let now = moment(formatDateFunc(new Date()), formatDate)
+            if (!startTime.isValid() || !endTime.isValid()) {
+                return false
+            } else {
+                if (startTime.isBefore(now) && endTime.isAfter(now)) {
+                    return true
+                }
+                return false
+            }
+        } else {
+            return false
+        }
+    }
 
     return (
         <div>
+            <div style={{ marginBottom: '20px' }}>
+                <Title level={5}>Chọn kỳ học</Title>
+                <Select style={{ width: 150 }} onChange={onChangeSemester}>
+                    {listSemester.map((i) => (
+                        <Option key={i._id} value={i.semester}>
+                            {i.semester}
+                        </Option>
+                    ))}
+                </Select>
+                <Text type="danger" style={{ marginLeft: '20px' }}>
+                    {!validateTimeToRegisterClass()
+                        ? !currentSemester
+                            ? ''
+                            : `Không phải thời điểm đăng ký lớp kỳ ${currentSemester}`
+                        : ''}
+                </Text>
+            </div>
             <Input.Group compact>
                 <Input
                     style={{ width: '200px' }}
                     placeholder="Nhập mã lớp"
                     onChange={handleChangeCode}
                 />
-                <Button type="primary" onClick={handleAddClass}>
+                <Button
+                    type="primary"
+                    onClick={handleAddClass}
+                    disabled={!validateTimeToRegisterClass()}
+                >
                     Thêm
                 </Button>
             </Input.Group>

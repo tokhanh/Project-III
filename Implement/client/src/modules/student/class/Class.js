@@ -13,7 +13,7 @@ const ClassContext = createContext()
 export const useClassContext = () => useContext(ClassContext)
 
 export default function Class() {
-    const { user } = useGlobalContext()
+    const { user, listSemester } = useGlobalContext()
     const [listClass, setListClass] = useState([])
     const [student, setStudent] = useState({})
 
@@ -82,10 +82,10 @@ export default function Class() {
         <ClassContext.Provider value={value}>
             <Tabs defaultActiveKey="1" type="card" style={{ margin: '10px' }}>
                 <TabPane tab="Danh sách lớp đang mở" key="1">
-                    <OpenClassTab />
+                    <OpenClassTab listSemester={listSemester}/>
                 </TabPane>
                 <TabPane tab="Đăng ký lớp" key="2">
-                    <RegisterClassTab />
+                    <RegisterClassTab listSemester={listSemester}/>
                 </TabPane>
             </Tabs>
         </ClassContext.Provider>

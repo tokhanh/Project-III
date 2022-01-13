@@ -1,12 +1,14 @@
-import { Button, Input, Table, Tooltip } from 'antd'
+import { Input, Table, Select, Typography } from 'antd'
 import React, { useState } from 'react'
 import { useClassContext } from './Class'
-
+const { Option } = Select
+const { Title } = Typography
 const { Search } = Input
 
-export default function OpenClassTab() {
-    const { listClass, fetchData } = useClassContext()
-    const [keySeach, setKeySearch] = useState('')
+export default function OpenClassTab(props) {
+    const { listSemester } = props
+    const { listClass } = useClassContext()
+    
 
     const columns = [
         {
@@ -51,40 +53,73 @@ export default function OpenClassTab() {
         },
     ]
 
-    const handleRefreshData = () => {
-        fetchData()
+    const [classCodeKeySearch, setClassCodeKeySearch] = useState('')
+    const [subjectCodeKeySearch, setSubjectCodeKeySearch] = useState('')
+    const handleChangeSubjectCodeKeySearch = (e) => setSubjectCodeKeySearch(e.target.value)
+    const handleChangeClassCodeKeySearch = (e) => setClassCodeKeySearch(e.target.value)
+
+    const handleSubjectCodeSearch = () => {
+        let keyCode = new RegExp(`${subjectCodeKeySearch}`, 'gi')
+        setListClassInSemester(
+            listClass
+                .filter(
+                    (i) => i.semester.toString() === currentSemester?.toString()
+                )
+                .filter((i) => i.subjectCode.toString().match(keyCode))
+        )
+    }
+    const handleClassCodeSearch = () => {
+        let keyCode = new RegExp(`${classCodeKeySearch}`, 'gi')
+        setListClassInSemester(
+            listClass
+                .filter(
+                    (i) => i.semester.toString() === currentSemester?.toString()
+                )
+                .filter((i) => i.code.toString().match(keyCode))
+        )
     }
 
-    const handleChangeKeySearch = (e) => setKeySearch(e.target.value)
 
-    const handleSearch = () => {
-        fetchData({
-            codeKey: keySeach,
-        })
+    const [currentSemester, setCurrentSemester] = useState(null)
+    const [listClassInSemester, setListClassInSemester] = useState([])
+    const onChangeSemester = (value) => {
+        setCurrentSemester(value)
+        setListClassInSemester(
+            listClass.filter((i) => i.semester.toString() === value.toString())
+        )
     }
 
     return (
         <>
+            <div>
+                <Title level={5}>Chọn kỳ học</Title>
+                <Select style={{ width: 150 }} onChange={onChangeSemester}>
+                    {listSemester.map((i) => (
+                        <Option key={i._id} value={i.semester}>
+                            {i.semester}
+                        </Option>
+                    ))}
+                </Select>
+            </div>
             <div
                 style={{
                     display: 'flex',
-                    flexDirection: 'row-reverse',
                     padding: '10px',
                 }}
             >
                 <Search
-                    placeholder="Nhập mã môn học"
-                    onSearch={handleSearch}
-                    onChange={handleChangeKeySearch}
+                    placeholder="Tìm kiếm mã lớp"
+                    onSearch={handleClassCodeSearch}
+                    onChange={handleChangeClassCodeKeySearch}
                 />
-                <Tooltip title="Refresh">
-                    <Button onClick={handleRefreshData}>
-                        <i className="fas fa-sync-alt"></i>
-                    </Button>
-                </Tooltip>
+                <Search
+                    placeholder="Tìm kiếm mã môn học"
+                    onSearch={handleSubjectCodeSearch}
+                    onChange={handleChangeSubjectCodeKeySearch}
+                />
             </div>
             <Table
-                dataSource={listClass}
+                dataSource={listClassInSemester}
                 columns={columns}
                 bordered
                 title={() => ''}

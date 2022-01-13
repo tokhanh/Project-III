@@ -1,15 +1,19 @@
-import { Button, Input, message, Space, Table, Typography } from 'antd'
+import { Button, Input, message, Space, Table, Typography, Select } from 'antd'
 import Modal from 'antd/lib/modal/Modal'
+import moment from 'moment'
 import React, { useState } from 'react'
 import { RequestMethods } from '../../../global/Constants'
 import { useGlobalContext } from '../../../global/GlobalContext'
 import sendRequest from '../../../helpers/requestHelpers'
 import { useStudentContext } from './ProfileAndEducationProgram'
 
-const { Text } = Typography
+const { Text, Title } = Typography
+const { Option } = Select
+
+const formatDate = 'DD/MM/YYYY HH:mm:ss'
 
 export default function RegisterUnitOfStudyTab() {
-    const { user } = useGlobalContext()
+    const { user, listSemester } = useGlobalContext()
     const {
         educationProgram,
         student,
@@ -111,7 +115,13 @@ export default function RegisterUnitOfStudyTab() {
             render: (text, record) => (
                 <Space size="middle">
                     {/* eslint-disable-next-line */}
-                    <a onClick={() => handleRemoveSubject(record._id)}>
+                    <a
+                        onClick={() =>
+                            !validateTimeToRegisterUnitOfStudy()
+                                ? {}
+                                : handleRemoveSubject(record._id)
+                        }
+                    >
                         <Text type="danger">Remove</Text>
                     </a>
                 </Space>
@@ -154,16 +164,72 @@ export default function RegisterUnitOfStudyTab() {
     const cancelModal = () => {
         setIsOpenModal(false)
     }
+    const [currentSemester, setCurrentSemester] = useState(null)
+    const onChangeSemester = (value) => {
+        setCurrentSemester(value)
+    }
+    const formatDateFunc = (date) => {
+        const _date = new Date(date)
+        const day = _date.getDate()
+        const month = _date.getMonth() + 1
+        const year = _date.getFullYear()
+        const hour = _date.getHours()
+        const minutes = _date.getMinutes()
+        const seconds = _date.getSeconds()
+        return `${day}/${month}/${year} ${hour}:${minutes}:${seconds}`
+    }
 
+    const validateTimeToRegisterUnitOfStudy = () => {
+        let _csemester = listSemester.find(
+            (i) => i?.semester?.toString() === currentSemester?.toString()
+        )
+        let time = _csemester?.registerUnitOfStudyTime
+        if (time) {
+            let startTime = moment(formatDateFunc(time?.startTime), formatDate)
+            let endTime = moment(formatDateFunc(time?.endTime), formatDate)
+            let now = moment(formatDateFunc(new Date()), formatDate)
+            if (!startTime.isValid() || !endTime.isValid()) {
+                return false
+            } else {
+                if (startTime.isBefore(now) && endTime.isAfter(now)) {
+                    return true
+                }
+                return false
+            }
+        } else {
+            return false
+        }
+    }
     return (
         <div>
+            <div style={{ marginBottom: '20px' }}>
+                <Title level={5}>Chọn kỳ học</Title>
+                <Select style={{ width: 150 }} onChange={onChangeSemester}>
+                    {listSemester.map((i) => (
+                        <Option key={i._id} value={i.semester}>
+                            {i.semester}
+                        </Option>
+                    ))}
+                </Select>
+                <Text type="danger" style={{ marginLeft: '20px' }}>
+                    {!validateTimeToRegisterUnitOfStudy()
+                        ? !currentSemester
+                            ? ''
+                            : `Không phải thời điểm đăng ký học phần kỳ ${currentSemester}`
+                        : ''}
+                </Text>
+            </div>
             <Input.Group compact>
                 <Input
                     style={{ width: '200px' }}
                     placeholder="Nhập mã học phần"
                     onChange={handleChangeCode}
                 />
-                <Button type="primary" onClick={handleAddUnitOfStudy}>
+                <Button
+                    type="primary"
+                    onClick={handleAddUnitOfStudy}
+                    disabled={!validateTimeToRegisterUnitOfStudy()}
+                >
                     Thêm
                 </Button>
             </Input.Group>
