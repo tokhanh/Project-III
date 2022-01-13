@@ -1,3 +1,4 @@
+import { message } from 'antd'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import sendRequest from '../helpers/requestHelpers'
 import { RequestMethods } from './Constants'
@@ -10,7 +11,8 @@ export const useGlobalContext = () => {
 
 export default function GlobalContextProvider({ children }) {
     const [user, setUser] = useState(localStorage.getItem('uid'))
-    const [isAdmin, setIsAdmin] = useState(user === '61bc89e654002066071c7f62')
+    const [isAdmin, setIsAdmin] = useState(null)
+    const [listSemester, setListSemester] = useState([])
 
     function setCurrentUser(user) {
         setUser(user)
@@ -34,12 +36,37 @@ export default function GlobalContextProvider({ children }) {
         setUser(null)
     }
 
+    const fetchTimestamp = async (data = {}) => {
+        const response = await sendRequest({
+            url: 'http://localhost:4001/v1/training-department/timestamp',
+            method: RequestMethods.GET,
+            data: data,
+        })
+        if (response) {
+            const content = response.data.content.sort(
+                (a, b) => b.semester - a.semester
+            )
+            setListSemester(content)
+        } else {
+            message.error('Lấy danh sách các kỳ thất bại!')
+        }
+    }
+    useEffect(() => {
+        return fetchTimestamp()
+    }, [])
+    useEffect(() => {
+        if (user === '61bc89e654002066071c7f62') {
+            setIsAdmin(user)
+        }
+    }, [user])
+
     const value = {
         user,
         isAdmin,
         login,
         logout,
         setCurrentUser,
+        listSemester
     }
     
     return (

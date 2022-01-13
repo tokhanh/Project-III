@@ -5,8 +5,8 @@ import styled from 'styled-components'
 import { useGlobalContext } from '../../global/GlobalContext'
 
 export default function Login() {
-    const { login, setCurrentUser, user } = useGlobalContext()
-
+    const { login, setCurrentUser, user, isAdmin } = useGlobalContext()
+    console.log(user)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [isLoading, setLoading] = useState(false)
@@ -41,13 +41,13 @@ export default function Login() {
 
     useEffect(() => {
         const detectLogin = () => {
-            if (user || isLoading) {
+            if (user || isAdmin) {
                 navigate('/')
             }
         }
-        return () => detectLogin()
+        return detectLogin()
         // eslint-disable-next-line
-    }, [user, isLoading])
+    }, [user, isLoading, isAdmin])
 
     return (
         <LoginContainer>
