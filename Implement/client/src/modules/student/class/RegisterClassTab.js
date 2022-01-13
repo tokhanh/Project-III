@@ -21,6 +21,7 @@ const formatDate = 'DD/MM/YYYY HH:mm:ss'
 export default function RegisterClassTab(props) {
     const { listSemester } = props
     const { listClass, student, fetchData } = useClassContext()
+    const [listClassInSemester, setListClassInSemester] = useState([])
 
     const registeredClass = listClass
         .map((_class) =>
@@ -50,14 +51,21 @@ export default function RegisterClassTab(props) {
     const validationClassCode = (string = '') => {
         const _string = string.toString().trim()
         //eslint-disable-next-line
-        const openClass = listClass.find((i) => i.code.toString() == _string)
+        const openClass = listClassInSemester.find((i) => i.code.toString() == _string)
         if (openClass) {
             return openClass
         }
         return false
     }
     //eslint-disable-next-line
-    const checkDuplicateTimeTable = () => {}
+    const checkDuplicateTimeTable = (registerClass) => {
+        const listDuplicateDay = listRegisterClass.filter(i => i.defaultTime.day.toString() === registerClass.defaultTime.day.toString())
+        const listDuplicate = listDuplicateDay.find(i => i.defaultTime.shift.toString() === registerClass.defaultTime.shift.toString())
+        if (listDuplicate) {
+            return listDuplicate
+        }
+        return false
+    }
 
     const checkIsExistedCode = (list = [], id = '') => {
         return list.some((i) => i._id === id)
@@ -97,8 +105,14 @@ export default function RegisterClassTab(props) {
 
     const handleAddClass = () => {
         const registerClass = validationClassCode(classCode)
+        
         if (!registerClass) {
             message.error('Mã lớp không tồn tại!')
+            return
+        }
+        const duplicateClass = checkDuplicateTimeTable(registerClass)
+        if (duplicateClass) {
+            message.error(`Trùng thời khóa biểu ${duplicateClass.code} - ${duplicateClass.subjectName}`)
             return
         }
         if (checkIsExistedCode(listRegisterClass, registerClass._id)) {
@@ -194,6 +208,9 @@ export default function RegisterClassTab(props) {
     const [currentSemester, setCurrentSemester] = useState(null)
     const onChangeSemester = (value) => {
         setCurrentSemester(value)
+        setListClassInSemester(
+            listClass.filter((i) => i.semester.toString() === value.toString())
+        )
     }
 
     const formatDateFunc = (date) => {
@@ -263,7 +280,7 @@ export default function RegisterClassTab(props) {
                 <Button
                     type="primary"
                     onClick={handleAddClass}
-                    disabled={!validateTimeToRegisterClass()}
+                    //disabled={!validateTimeToRegisterClass()}
                 >
                     Thêm
                 </Button>

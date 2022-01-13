@@ -33,6 +33,9 @@ export default function GlobalContextProvider({ children }) {
 
     const logout = () => {
         localStorage.removeItem('uid')
+        if (isAdmin) {
+            setIsAdmin(null)
+        }
         setUser(null)
     }
 
