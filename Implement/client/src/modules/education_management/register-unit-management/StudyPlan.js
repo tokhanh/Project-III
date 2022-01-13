@@ -68,6 +68,10 @@ export default function StudyPlan() {
             message.error('Thời gian không được để trống !')
             return
         }
+        if (!validateTimestampInOrder()) {
+            message.error('Thứ tự thời gian không hợp lệ!')
+            return
+        }
         const response = await sendRequest({
             url: 'http://localhost:4001/v1/training-department/timestamp',
             method: RequestMethods.PUT,
@@ -190,6 +194,13 @@ export default function StudyPlan() {
             _endDateRegisterPrioty.isValid() &&
             _startDateRegisterAdjusted.isValid() &&
             _endDateRegisterAdjusted.isValid()
+        )
+    }
+
+    const validateTimestampInOrder = () => {
+        return (
+            _endDateUnitOfStudy.isBefore(_startDateRegisterPrioty) &&
+            _endDateRegisterPrioty.isBefore(_startDateRegisterAdjusted)
         )
     }
 
