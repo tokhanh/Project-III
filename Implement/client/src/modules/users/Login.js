@@ -6,7 +6,6 @@ import { useGlobalContext } from '../../global/GlobalContext'
 
 export default function Login() {
     const { login, setCurrentUser, user, isAdmin } = useGlobalContext()
-    console.log(user)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [isLoading, setLoading] = useState(false)
