@@ -5,7 +5,7 @@ const Student = require('../../models/student.model')
 const Timestamp = require('../../models/timestamp.model')
 const moment = require('moment')
 
-/*Student service */
+/**Timestamp service */
 const getTimestamp = async () => {
     const listTimestamp = await Timestamp.find()
     return listTimestamp
@@ -51,7 +51,7 @@ const updateTimestamp = async (data = {}) => {
     )
     return 'done'
 }
-
+/*Student service */
 const getAllStudents = async (params = {}) => {
     const {} = params
     const keySearch = {}
@@ -71,7 +71,36 @@ const removeStudentsOfClass = async (params = {}) => {
             },
         }
     )
-    return 'success fully'
+    return result
+}
+/**Register unit of study service */
+const getListRegisterUnit = async (params = {}) => {
+    const {} = params
+    const keySearch = {}
+    const listStudent = await Student.find(keySearch).populate({
+        path: 'registerUnitOfStudies',
+    })
+
+    let listUnitOfStudies = []
+    for (let student of listStudent) {
+        listUnitOfStudies = [...listUnitOfStudies, ...student.registerUnitOfStudies] 
+    }
+
+    listUnitOfStudies = listUnitOfStudies.map(i => i.code)
+    let listUnitOfStudiesDistinct = listUnitOfStudies.filter((x, i, a) => a.indexOf(x) == i).sort((a, b) => a.toString().localeCompare(b.toString()))
+
+    let listCount = new Array(listUnitOfStudiesDistinct.length).fill(0)
+    for(let item of listUnitOfStudies) {
+        let index = listUnitOfStudiesDistinct.indexOf(item)
+        listCount[index] = listCount[index] + 1
+    }
+
+    let listMapUnitOfStudy = new Map()
+    for(let i = 0; i < listUnitOfStudiesDistinct.length; i++) {
+        listMapUnitOfStudy.set(listUnitOfStudiesDistinct[i], listCount[i])
+    }
+
+    return [...listMapUnitOfStudy]
 }
 
 /*Subject service*/
@@ -246,6 +275,7 @@ module.exports = {
     createNewSubject,
     updateSubject,
     deleteSubject,
+    getListRegisterUnit,
     getListClass,
     createNewClass,
     updateClass,

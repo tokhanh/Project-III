@@ -5,25 +5,6 @@ const TrainingDepartmentController = require('../training-department/training-de
 
 const router = express.Router()
 
-const validateSubject = (data) => {
-    const subjectSchema = Joi.object({
-        name: Joi.string(),
-        code: Joi.string(),
-        credit: Joi.number(),
-        institude: Joi.string(),
-    })
-    return subjectSchema.validate(data)
-}
-
-const validateEducationProgram = (data) => {
-    const educationProgramSchema = Joi.object({
-        code: Joi.string().required(),
-        name: Joi.string().required(),
-        subjects: Joi.array().items(Joi.string()),
-    })
-    return educationProgramSchema.validate(data)
-}
-
 /**Timestamp */
 router.get('/timestamp', TrainingDepartmentController.getTimestamp)
 router.post('/timestamp', TrainingDepartmentController.createTimestamp)
@@ -31,6 +12,8 @@ router.put('/timestamp', TrainingDepartmentController.updateTimestamp)
 /**Student controller */
 router.get('/list-student', TrainingDepartmentController.getAllStudents)
 router.post('/remove-student-of-class', TrainingDepartmentController.removeStudentsOfClass)
+/**Register unit of study controller */
+router.get('/listRegister', TrainingDepartmentController.getListRegisterUnit)
 
 /*Subject controller*/
 

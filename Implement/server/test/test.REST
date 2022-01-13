@@ -92,3 +92,6 @@ Content-Type: application/json
     "inClass": [],
     "diffClass": []
 }
+
+###
+GET http://localhost:4001/v1/training-department/listRegister
