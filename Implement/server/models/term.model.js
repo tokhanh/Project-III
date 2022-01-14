@@ -11,7 +11,8 @@ const termSchema = new mongoose.Schema({
     },
     subject: {
         type: mongoose.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'Subject'
     }
 })
 

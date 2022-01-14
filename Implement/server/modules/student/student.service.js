@@ -2,6 +2,7 @@ const Student = require('../../models/student.model')
 const User = require('../../models/user.model')
 const mongoose = require('mongoose')
 const Class = require('../../models/class.model')
+const Term = require('../../models/term.model')
 
 const getStudentProfile = async (params = {}) => {
     const { id } = params
@@ -56,24 +57,20 @@ const getStudentProfile = async (params = {}) => {
 }
 
 const getListRegisteredUnit = async (params = {}) => {
-    const listRegisteredUnit = await Student.find({ ...params }).populate({
-        path: 'registerUnitOfStudies',
+    const { studentId } = params
+    const result = await Term.find({
+        studentId: studentId
+    }).populate({
+        path: 'subject'
     })
-    return listRegisteredUnit
+    return result
 }
 
 const updateListRegisterUnit = async (data = {}) => {
-    const { sid, uid, registerUnitOfStudies } = data
-    await Student.findOneAndUpdate(
-        { _id: sid },
-        {
-            $set: {
-                registerUnitOfStudies: registerUnitOfStudies,
-            },
-        }
-    )
-    const newStudentProfile = await getStudentProfile({ id: uid })
-    return newStudentProfile
+    const { studentId, listRegister } = data
+    await Term.deleteMany({studentId: studentId})
+    await Term.insertMany(listRegister)
+    return "true"
 }
 
 const updateClass = async (data = {}) => {

@@ -15,6 +15,20 @@ const getProfile = async (req, res, next) => {
     }
 }
 
+const getListRegisterUnitOfStudy = async (req, res, next) => {
+    const params = req.query
+    try {
+        const data = await StudentService.getListRegisteredUnit(params)
+        return res.status(200).json({
+            success: true,
+            message: 'get_data_success',
+            content: data,
+        })
+    } catch (err) {
+        next(createHttpError.BadRequest(err))
+    }
+}
+
 const registerUnitOfStudy = async (req, res, next) => {
     try {
         const data = await StudentService.updateListRegisterUnit(req.body)
@@ -69,6 +83,7 @@ const registerClass = async (req, res, next) => {
 
 module.exports = {
     getProfile,
+    getListRegisterUnitOfStudy,
     viewRegisteredClass,
     viewClass,
     registerClass,

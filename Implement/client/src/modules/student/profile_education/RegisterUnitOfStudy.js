@@ -1,7 +1,7 @@
 import { Button, Input, message, Space, Table, Typography, Select } from 'antd'
 import Modal from 'antd/lib/modal/Modal'
 import moment from 'moment'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RequestMethods } from '../../../global/Constants'
 import { useGlobalContext } from '../../../global/GlobalContext'
 import sendRequest from '../../../helpers/requestHelpers'
@@ -13,24 +13,65 @@ const { Option } = Select
 const formatDate = 'DD/MM/YYYY HH:mm:ss'
 
 export default function RegisterUnitOfStudyTab() {
-    const { user, listSemester } = useGlobalContext()
-    const {
-        educationProgram,
-        student,
-        registerUnitOfStudies,
-        setStudentInformation,
-    } = useStudentContext()
+    const { listSemester } = useGlobalContext()
+    const { educationProgram, student } = useStudentContext()
 
-    const [listRegister, setListRegister] = useState([
-        ...educationProgram.subjects
-            .map((subject) => {
-                if (registerUnitOfStudies.some((i) => i === subject._id)) {
-                    return subject
-                }
-                return undefined
-            })
-            .filter((i) => i),
-    ])
+    const [listRegister, setListRegister] = useState([])
+    const [listRegisterInSemester, setListRegisterInSemester] = useState([])
+    const [currentSemester, setCurrentSemester] = useState(null)
+    const onChangeSemester = (value) => {
+        setListRegisterInSemester(
+            listRegister
+                .filter((i) => i.semester.toString() === value.toString())
+                .map((i) => ({
+                    key: i.subject._id,
+                    _id: i.subject._id,
+                    code: i.subject.code,
+                    name: i.subject.name,
+                    credit: i.subject.credit,
+                    institude: i.subject.institude,
+                }))
+        )
+        setCurrentSemester(value)
+    }
+    console.log(listRegister)
+
+    const fetchListUnitOfStudy = async (data = {}) => {
+        const response = await sendRequest({
+            method: RequestMethods.GET,
+            url: 'http://localhost:4001/v1/student/list-register-unit-of-study',
+            data: data,
+        })
+        if (response) {
+            const receiveData = response.data.content
+            setListRegister(receiveData)
+            if (currentSemester) {
+                setListRegisterInSemester(
+                    receiveData
+                        .filter(
+                            (i) =>
+                                i.semester.toString() ===
+                                currentSemester.toString()
+                        )
+                        .map((i) => ({
+                            key: i.subject._id,
+                            _id: i.subject._id,
+                            code: i.subject.code,
+                            name: i.subject.name,
+                            credit: i.subject.credit,
+                            institude: i.subject.institude,
+                        }))
+                )
+            }
+        } else {
+            message.error('Lấy danh sách đăng ký học phần thất bại!')
+        }
+    }
+    useEffect(() => {
+        return fetchListUnitOfStudy({
+            studentId: student.studentId,
+        })
+    }, [])
 
     const [code, setCode] = useState('')
     const [isOpenModal, setIsOpenModal] = useState(false)
@@ -46,8 +87,12 @@ export default function RegisterUnitOfStudyTab() {
 
     const checkChangeListRegisterSubject = () => {
         return (
-            JSON.stringify(sortCodeStringArray(listRegister)) ===
-            JSON.stringify(registerUnitOfStudies)
+            JSON.stringify(sortCodeStringArray(listRegisterInSemester)) ===
+            JSON.stringify(
+                sortCodeStringArray(
+                    listRegister.map((i) => ({ ...i, _id: i.subject._id }))
+                )
+            )
         )
     }
 
@@ -73,24 +118,29 @@ export default function RegisterUnitOfStudyTab() {
     }
 
     const handleAddUnitOfStudy = () => {
-        const subject = validationCode(code)
+        let subject = validationCode(code)
         if (!subject) {
             message.error('Mã học phần không tồn tại!')
             return
         }
-        if (checkIsExistedCode(listRegister, subject._id)) {
+        if (checkIsExistedCode(listRegisterInSemester, subject._id)) {
             message.error('Trùng mã học phần!')
             return
         }
-        if (!checkLimitedCredit(listRegister, subject)) {
+        if (!checkLimitedCredit(listRegisterInSemester, subject)) {
             message.error('Giới hạn tín chỉ tối đa !!')
             return
         }
-        setListRegister([...listRegister, subject])
+        subject = { ...subject, key: subject._id }
+        setListRegisterInSemester([...listRegisterInSemester, subject])
     }
 
-    const handleRemoveSubject = (id) => {
-        setListRegister(listRegister.filter((i) => i._id !== id))
+    const handleRemoveSubject = (record) => {
+        setListRegisterInSemester(
+            listRegisterInSemester.filter(
+                (i) => i._id.toString() !== record.key.toString()
+            )
+        )
     }
 
     const columns = [
@@ -118,8 +168,8 @@ export default function RegisterUnitOfStudyTab() {
                     <a
                         onClick={() =>
                             !validateTimeToRegisterUnitOfStudy()
-                                ? {}
-                                : handleRemoveSubject(record._id)
+                                ? {} :
+                            handleRemoveSubject(record)
                         }
                     >
                         <Text type="danger">Remove</Text>
@@ -129,27 +179,27 @@ export default function RegisterUnitOfStudyTab() {
         },
     ]
 
+    const convertRegisterUnitDataBeforeSave = (list = []) => {
+        const _listRegister = list.map((i) => ({
+            semester: currentSemester,
+            studentId: student.studentId,
+            subject: i._id,
+        }))
+        return {
+            studentId: student.studentId,
+            listRegister: _listRegister,
+        }
+    }
+
     const handleSubmit = async () => {
         const response = await sendRequest({
             method: RequestMethods.POST,
             url: 'http://localhost:4001/v1/student/register-unit-of-study',
-            data: {
-                uid: user,
-                sid: student._id,
-                registerUnitOfStudies: listRegister.map((i) => i._id),
-            },
+            data: convertRegisterUnitDataBeforeSave(listRegisterInSemester),
         })
         if (response) {
-            setStudentInformation({
-                institude: response.data.content[0]?.institude[0],
-                student: response.data.content[0]?.student[0],
-                educationProgram: {
-                    code: response.data.content[0].educationProgram[0]?.code,
-                    name: response.data.content[0].student[0]?.name,
-                    subjects: response.data.content[0]?.subjects,
-                },
-                registerUnitOfStudies:
-                    response.data.content[0]?.student[0]?.registerUnitOfStudies,
+            fetchListUnitOfStudy({
+                studentId: student.studentId,
             })
             message.success('Đăng ký học phần thành công!')
         } else {
@@ -164,10 +214,7 @@ export default function RegisterUnitOfStudyTab() {
     const cancelModal = () => {
         setIsOpenModal(false)
     }
-    const [currentSemester, setCurrentSemester] = useState(null)
-    const onChangeSemester = (value) => {
-        setCurrentSemester(value)
-    }
+
     const formatDateFunc = (date) => {
         const _date = new Date(date)
         const day = _date.getDate()
@@ -200,6 +247,7 @@ export default function RegisterUnitOfStudyTab() {
             return false
         }
     }
+
     return (
         <div>
             <div style={{ marginBottom: '20px' }}>
@@ -228,15 +276,12 @@ export default function RegisterUnitOfStudyTab() {
                 <Button
                     type="primary"
                     onClick={handleAddUnitOfStudy}
-                    disabled={!validateTimeToRegisterUnitOfStudy()}
+                    disabled={!currentSemester || !validateTimeToRegisterUnitOfStudy()}
                 >
                     Thêm
                 </Button>
             </Input.Group>
-            <Table
-                columns={columns}
-                dataSource={listRegister.map((i) => ({ ...i, key: i._id }))}
-            />
+            <Table columns={columns} dataSource={listRegisterInSemester} />
             <Space
                 style={{
                     width: '100%',
@@ -247,7 +292,7 @@ export default function RegisterUnitOfStudyTab() {
             >
                 <Button
                     type="primary"
-                    disabled={checkChangeListRegisterSubject()}
+                    disabled={!currentSemester || checkChangeListRegisterSubject()}
                     onClick={confirmModal}
                 >
                     Đăng ký
