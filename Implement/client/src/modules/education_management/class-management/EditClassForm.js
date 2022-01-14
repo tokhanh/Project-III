@@ -35,6 +35,7 @@ export default function EditClassForm(props) {
             defaultTime: data.defaultTime,
             semester: data.semester,
         })
+        /* eslint-disable-next-line */
     }, [JSON.stringify(data)])
 
     const onChangePosition = (e) => {

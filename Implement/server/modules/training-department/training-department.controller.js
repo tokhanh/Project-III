@@ -16,7 +16,7 @@ const getTimestamp = async (req, res, next) => {
 
 const createTimestamp = async (req, res, next) => {
     try {
-        const data = await TrainingService.createTimestamp()
+        const data = await TrainingService.createTimestamp(req.body)
         return res.status(200).send({
             success: true,
             message: "get_data_success",

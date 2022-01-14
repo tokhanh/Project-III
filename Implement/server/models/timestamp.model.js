@@ -4,6 +4,7 @@ const timeStampSchema = new mongoose.Schema({
     semester: {
         type: 'String',
         required: true,
+        unique: true,
     },
     registerUnitOfStudyTime: {
         startTime: {

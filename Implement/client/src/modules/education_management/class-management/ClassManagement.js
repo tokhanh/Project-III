@@ -22,9 +22,7 @@ const { Option } = Select
 export default function ClassManagement() {
     const [listClass, setListClass] = useState([])
     const [listAllStudent, setListAllStudent] = useState([])
-    {
-        /* eslint-disable-next-line */
-    }
+    /* eslint-disable-next-line */
     const [listTimestamp, setListTimeStamp] = useState([])
     const [semester, setSemester] = useState(null)
     const [listClassInSemester, setListClassInSemester] = useState([])
@@ -175,7 +173,9 @@ export default function ClassManagement() {
             }))
             setListClass(_data)
             setListClassInSemester(
-                _data.filter((i) => i.semester.toString() == semester)
+                _data.filter(
+                    (i) => i?.semester?.toString() === semester?.toString()
+                )
             )
         } else {
             message.error('Get open class failed!')
@@ -243,16 +243,16 @@ export default function ClassManagement() {
 
     const [classCodeKeySearch, setClassCodeKeySearch] = useState('')
     const [subjectCodeKeySearch, setSubjectCodeKeySearch] = useState('')
-    const handleChangeSubjectCodeKeySearch = (e) => setSubjectCodeKeySearch(e.target.value)
-    const handleChangeClassCodeKeySearch = (e) => setClassCodeKeySearch(e.target.value)
+    const handleChangeSubjectCodeKeySearch = (e) =>
+        setSubjectCodeKeySearch(e.target.value)
+    const handleChangeClassCodeKeySearch = (e) =>
+        setClassCodeKeySearch(e.target.value)
 
     const handleSubjectCodeSearch = () => {
         let keyCode = new RegExp(`${subjectCodeKeySearch}`, 'gi')
         setListClassInSemester(
             listClass
-                .filter(
-                    (i) => i.semester.toString() === semester?.toString()
-                )
+                .filter((i) => i.semester.toString() === semester?.toString())
                 .filter((i) => i.subjectCode.toString().match(keyCode))
         )
     }
@@ -260,13 +260,10 @@ export default function ClassManagement() {
         let keyCode = new RegExp(`${classCodeKeySearch}`, 'gi')
         setListClassInSemester(
             listClass
-                .filter(
-                    (i) => i.semester.toString() === semester?.toString()
-                )
+                .filter((i) => i.semester.toString() === semester?.toString())
                 .filter((i) => i.code.toString().match(keyCode))
         )
     }
-
 
     useEffect(() => {
         return (() => {
@@ -274,9 +271,7 @@ export default function ClassManagement() {
             fetchStudentData()
             fetchData()
         })()
-        {
-            /* eslint-disable-next-line */
-        }
+        /* eslint-disable-next-line */
     }, [])
 
     return (

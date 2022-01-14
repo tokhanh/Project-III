@@ -11,7 +11,11 @@ const getTimestamp = async () => {
     return listTimestamp
 }
 
-const createTimestamp = async () => {
+const createTimestamp = async (data = {}) => {
+    const newSemester = new Timestamp({
+        semester: data.newSemester
+    })
+    await newSemester.save()
     return 'true'
 }
 
@@ -80,7 +84,7 @@ const getListRegisterUnit = async (params = {}) => {
     const listStudent = await Student.find(keySearch).populate({
         path: 'registerUnitOfStudies',
     })
-
+    
     let listUnitOfStudies = []
     for (let student of listStudent) {
         listUnitOfStudies = [...listUnitOfStudies, ...student.registerUnitOfStudies] 

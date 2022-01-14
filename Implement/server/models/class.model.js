@@ -26,6 +26,7 @@ const classModel = new mongoose.Schema({
     subjectId: {
         type: mongoose.Types.ObjectId,
         ref: 'Subject',
+        required: true
     },
     maximum: {
         type: Number,

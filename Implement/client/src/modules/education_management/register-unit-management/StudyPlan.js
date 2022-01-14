@@ -31,13 +31,23 @@ export default function StudyPlan() {
     const handleCancelConfirmModal = () => {
         setIsOpenConfirmModal(false)
     }
-    const handleAddSemesterSubmit = () => {
+    const handleAddSemesterSubmit = async (data = {}) => {
         if (!validateValueOfNewSemester()) {
             message.error('Giá trị phải là lớn nhất!')
             return
         }
-        message.success('Thêm học kỳ mới thành công!')
-        setIsOpenConfirmModal(false)
+        const response = await sendRequest({
+            url: 'http://localhost:4001/v1/training-department/timestamp',
+            method: RequestMethods.POST,
+            data: data,
+        }) 
+        if (response) {
+            message.success('Thêm học kỳ mới thành công!')
+            setIsOpenConfirmModal(false)
+        }
+        else {
+            message.error('Thêm học kỳ mới thất bại!')
+        }
     }
 
     const validateValueOfNewSemester = () => {
@@ -292,7 +302,7 @@ export default function StudyPlan() {
             </Block>
             <Modal
                 visible={isOpenConfirmModal}
-                onOk={handleAddSemesterSubmit}
+                onOk={() => handleAddSemesterSubmit({newSemester: newSemester})}
                 onCancel={handleCancelConfirmModal}
                 title="Thêm kỳ học"
                 okText="Thêm"

@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-    Space,
-    Table,
-    Typography,
-    Button,
-    Modal,
-    message,
-    Select,
-} from 'antd'
+import { Space, Table, Typography, Button, Modal, message, Select } from 'antd'
 
 const { Text } = Typography
 const { Option } = Select
@@ -25,10 +17,9 @@ export default function ManageStudentOfClass(props) {
 
     useEffect(() => {
         setListStudent(data.students)
+        /* eslint-disable-next-line */
     }, [JSON.stringify(data)])
 
-
-    
     const columns = [
         {
             title: 'Student ID',
@@ -71,11 +62,14 @@ export default function ManageStudentOfClass(props) {
     }
 
     const handleRemoveStudent = async () => {
-        const _listStudent = listStudent.filter(i => i.studentId.toString() !== currentStudent.studentId.toString())
+        const _listStudent = listStudent.filter(
+            (i) =>
+                i.studentId.toString() !== currentStudent.studentId.toString()
+        )
         const _updateClassData = {
             ...data,
-            students: _listStudent
-        } 
+            students: _listStudent,
+        }
         updateClassService(_updateClassData)
         setListStudent(_listStudent)
     }
@@ -92,12 +86,14 @@ export default function ManageStudentOfClass(props) {
             message.error('Student already in class list!')
             return
         } else {
-            let newStudent = listAllStudent.find(i => i._id.toString() === currentAddStudent.toString())
+            let newStudent = listAllStudent.find(
+                (i) => i._id.toString() === currentAddStudent.toString()
+            )
             const newListStudent = [...listStudent, newStudent]
             setListStudent(newListStudent)
             let _updateClassData = {
                 ...data,
-                students: newListStudent
+                students: newListStudent,
             }
             updateClassService(_updateClassData)
         }

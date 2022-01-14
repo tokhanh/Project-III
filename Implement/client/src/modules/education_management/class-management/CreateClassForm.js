@@ -93,6 +93,7 @@ export default function CreateClassForm(props) {
             data: data,
         })
         if (response) {
+            refreshData()
             message.success('Tạo lớp mới thành công!')
         } else {
             message.error('Tạo mới lớp thất bại!')
@@ -104,18 +105,18 @@ export default function CreateClassForm(props) {
     }, [])
     const validateInput = () => {
         return (
-            newClassData.code == '' ||
-            newClassData.time.day == '' ||
-            newClassData.time.shift == '' ||
-            newClassData.maximum == '' ||
-            newClassData.position == '' ||
-            newClassData.subjectId == ''
+            newClassData.code.toString() === '' ||
+            newClassData.time.day.toString() === '' ||
+            newClassData.time.shift.toString() === '' ||
+            newClassData.maximum.toString() === '' ||
+            newClassData.position.toString() === '' ||
+            newClassData.subjectId.toString() === ''
         )
     }
 
     const validateClassCode = () => {
         let isExistedCode = listClassInSemester.some(
-            (i) => i.code.toString() == newClassData.code.toString()
+            (i) => i.code.toString() === newClassData.code.toString()
         )
         return isExistedCode
     }
@@ -127,9 +128,9 @@ export default function CreateClassForm(props) {
         )
         let existedTime = listClassInTheSamePlace.find(
             (i) =>
-                i.defaultTime.day.toString() ==
+                i.defaultTime.day.toString() ===
                     newClassData.time.day.toString() &&
-                i.defaultTime.shift.toString() ==
+                i.defaultTime.shift.toString() ===
                     newClassData.time.shift.toString()
         )
         return existedTime
@@ -169,6 +170,7 @@ export default function CreateClassForm(props) {
             ...newClassData,
             semester: semester,
         })
+    /* eslint-disable-next-line */
     }, [semester])
 
     return (
