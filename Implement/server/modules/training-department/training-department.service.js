@@ -3,6 +3,7 @@ const EducationProgram = require('../../models/educationProgram.model')
 const Subject = require('../../models/subject.model')
 const Student = require('../../models/student.model')
 const Timestamp = require('../../models/timestamp.model')
+const Term = require('../../models/term.model')
 const moment = require('moment')
 
 /**Timestamp service */
@@ -13,7 +14,7 @@ const getTimestamp = async () => {
 
 const createTimestamp = async (data = {}) => {
     const newSemester = new Timestamp({
-        semester: data.newSemester
+        semester: data.newSemester,
     })
     await newSemester.save()
     return 'true'
@@ -79,29 +80,39 @@ const removeStudentsOfClass = async (params = {}) => {
 }
 /**Register unit of study service */
 const getListRegisterUnit = async (params = {}) => {
-    const {} = params
-    const keySearch = {}
-    const listStudent = await Student.find(keySearch).populate({
-        path: 'registerUnitOfStudies',
-    })
-    
-    let listUnitOfStudies = []
-    for (let student of listStudent) {
-        listUnitOfStudies = [...listUnitOfStudies, ...student.registerUnitOfStudies] 
+    const { semester } = params
+
+    const keySearch = {
+        semester: semester,
     }
 
-    listUnitOfStudies = listUnitOfStudies.map(i => i.code)
-    let listUnitOfStudiesDistinct = listUnitOfStudies.filter((x, i, a) => a.indexOf(x) == i).sort((a, b) => a.toString().localeCompare(b.toString()))
+    let listRegister = await Term.find(keySearch).populate({
+        path: 'subject',
+        populate: {
+            path: 'institude'
+        }
+    })
 
-    let listCount = new Array(listUnitOfStudiesDistinct.length).fill(0)
-    for(let item of listUnitOfStudies) {
-        let index = listUnitOfStudiesDistinct.indexOf(item)
+    let listRegisterDistinct = listRegister
+        .map((i) => i.subject.code)
+        .filter((x, i, a) => a.indexOf(x) == i)
+        .sort((a, b) => a.toString().localeCompare(b.toString()))
+
+    let listCount = new Array(listRegisterDistinct.length).fill(0)
+    let listData = new Array(listRegisterDistinct.length).fill(0)
+
+    for (let item of listRegister) {
+        let index = listRegisterDistinct.indexOf(item.subject.code)
         listCount[index] = listCount[index] + 1
+        listData[index] = item.subject
     }
 
     let listMapUnitOfStudy = new Map()
-    for(let i = 0; i < listUnitOfStudiesDistinct.length; i++) {
-        listMapUnitOfStudy.set(listUnitOfStudiesDistinct[i], listCount[i])
+    for (let i = 0; i < listRegisterDistinct.length; i++) {
+        listMapUnitOfStudy.set(listRegisterDistinct[i], {
+            count: listCount[i],
+            data: listData[i],
+        })
     }
 
     return [...listMapUnitOfStudy]
