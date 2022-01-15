@@ -34,7 +34,6 @@ export default function RegisterUnitOfStudyTab() {
         )
         setCurrentSemester(value)
     }
-    console.log(listRegister)
 
     const fetchListUnitOfStudy = async (data = {}) => {
         const response = await sendRequest({
@@ -71,6 +70,7 @@ export default function RegisterUnitOfStudyTab() {
         return fetchListUnitOfStudy({
             studentId: student.studentId,
         })
+        /* eslint-disable-next-line */
     }, [])
 
     const [code, setCode] = useState('')
