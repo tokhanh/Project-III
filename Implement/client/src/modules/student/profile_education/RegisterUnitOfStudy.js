@@ -90,7 +90,7 @@ export default function RegisterUnitOfStudyTab() {
             JSON.stringify(sortCodeStringArray(listRegisterInSemester)) ===
             JSON.stringify(
                 sortCodeStringArray(
-                    listRegister.map((i) => ({ ...i, _id: i.subject._id }))
+                    listRegister.filter(i => i.semester.toString() === currentSemester.toString()).map((i) => ({ ...i, _id: i.subject._id }))
                 )
             )
         )
