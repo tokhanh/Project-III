@@ -22,36 +22,69 @@ export default function RegisterClassTab(props) {
     const { listSemester } = props
     const { listClass, student, fetchData } = useClassContext()
     const [listClassInSemester, setListClassInSemester] = useState([])
+    const [currentSemester, setCurrentSemester] = useState(null)
+    const [listRegisteredInSemester, setListRegisteredInSemester] = useState([])
+    const [newListRegisteredClassInSemester, setNewRegisteredClassInSemester] =
+        useState([])
+    const [listRegisterUnitOfStudy, setListRegisterUnitOfStudy] = useState([])
 
-    const registeredClass = listClass
-        .map((_class) =>
-            _class.students.find((i) => i._id === student._id)
-                ? { ..._class, key: _class.code }
-                : undefined
+    const fetchListUnitOfStudy = async (data = {}) => {
+        const response = await sendRequest({
+            method: RequestMethods.GET,
+            url: 'http://localhost:4001/v1/student/list-register-unit-of-study',
+            data: data,
+        })
+        if (response) {
+            const receiveData = response.data.content
+            setListRegisterUnitOfStudy(receiveData)
+        } else {
+            message.error('Lấy danh sách đăng ký học phần thất bại!')
+        }
+    }
+
+    const onChangeSemester = (value) => {
+        setCurrentSemester(value)
+        const _listClassInSemeter = listClass.filter(
+            (i) => i.semester.toString() === value.toString()
         )
-        .filter((i) => i)
-
-    const registerUnitOfStudies = student.registerUnitOfStudies
-
-    const [listRegisterClass, setListRegisterClass] = useState([
-        ...registeredClass,
-    ])
+        setListClassInSemester(_listClassInSemeter)
+        setListRegisteredInSemester(
+            _listClassInSemeter
+                .map((_class) =>
+                    _class.students.find((i) => i._id === student._id)
+                        ? { ..._class, key: _class.code }
+                        : undefined
+                )
+                .filter((i) => i)
+        )
+        setNewRegisteredClassInSemester(
+            _listClassInSemeter
+                .map((_class) =>
+                    _class.students.find((i) => i._id === student._id)
+                        ? { ..._class, key: _class.code }
+                        : undefined
+                )
+                .filter((i) => i)
+        )
+        fetchListUnitOfStudy({studentId: student.studentId})
+    }
 
     const checkIsChangeRegisterClass = () => {
         return (
-            JSON.stringify(listRegisterClass.sort((a, b) => a - b)) ===
-            JSON.stringify(registeredClass.sort((a, b) => a - b))
+            JSON.stringify(listRegisteredInSemester.sort((a, b) => a - b)) ===
+            JSON.stringify(newListRegisteredClassInSemester.sort((a, b) => a - b))
         )
     }
 
     const [classCode, setClassCode] = useState('')
-
     const handleChangeCode = (e) => setClassCode(e.target.value)
 
     const validationClassCode = (string = '') => {
         const _string = string.toString().trim()
         //eslint-disable-next-line
-        const openClass = listClassInSemester.find((i) => i.code.toString() == _string)
+        const openClass = listClassInSemester.find(
+            (i) => i.code.toString() == _string
+        )
         if (openClass) {
             return openClass
         }
@@ -59,8 +92,16 @@ export default function RegisterClassTab(props) {
     }
     //eslint-disable-next-line
     const checkDuplicateTimeTable = (registerClass) => {
-        const listDuplicateDay = listRegisterClass.filter(i => i.defaultTime.day.toString() === registerClass.defaultTime.day.toString())
-        const listDuplicate = listDuplicateDay.find(i => i.defaultTime.shift.toString() === registerClass.defaultTime.shift.toString())
+        const listDuplicateDay = newListRegisteredClassInSemester.filter(
+            (i) =>
+                i.defaultTime.day.toString() ===
+                registerClass.defaultTime.day.toString()
+        )
+        const listDuplicate = listDuplicateDay.find(
+            (i) =>
+                i.defaultTime.shift.toString() ===
+                registerClass.defaultTime.shift.toString()
+        )
         if (listDuplicate) {
             return listDuplicate
         }
@@ -72,7 +113,7 @@ export default function RegisterClassTab(props) {
     }
 
     const checkSubjectCodeIsExistedInListRegisterUnit = (registerClass) => {
-        return registerUnitOfStudies.find((i) => i === registerClass.subjectId)
+        return listRegisterUnitOfStudy.find((i) => i.subject._id.toString() === registerClass.subjectId.toString())
     }
 
     const validatePriotyTime = () => {
@@ -110,13 +151,15 @@ export default function RegisterClassTab(props) {
             message.error('Mã lớp không tồn tại!')
             return
         }
-        const duplicateClass = checkDuplicateTimeTable(registerClass)
-        if (duplicateClass) {
-            message.error(`Trùng thời khóa biểu ${duplicateClass.code} - ${duplicateClass.subjectName}`)
+        if (checkIsExistedCode(newListRegisteredClassInSemester, registerClass._id)) {
+            message.error('Trùng mã lớp!')
             return
         }
-        if (checkIsExistedCode(listRegisterClass, registerClass._id)) {
-            message.error('Trùng mã lớp!')
+        const duplicateClass = checkDuplicateTimeTable(registerClass)
+        if (duplicateClass) {
+            message.error(
+                `Trùng thời khóa biểu ${duplicateClass.code} - ${duplicateClass.subjectName}`
+            )
             return
         }
         if (validatePriotyTime()) {
@@ -127,11 +170,11 @@ export default function RegisterClassTab(props) {
                 return
             }
         }
-        setListRegisterClass([...listRegisterClass, registerClass])
+        setNewRegisteredClassInSemester([...newListRegisteredClassInSemester, registerClass])
     }
 
     const handleRemoveClass = (id) => {
-        setListRegisterClass(listRegisterClass.filter((i) => i._id !== id))
+        setNewRegisteredClassInSemester(newListRegisteredClassInSemester.filter((i) => i._id !== id))
     }
     const columns = [
         {
@@ -184,12 +227,13 @@ export default function RegisterClassTab(props) {
             method: RequestMethods.POST,
             url: 'http://localhost:4001/v1/student/register-class',
             data: {
-                inClass: listRegisterClass.map((i) => i._id),
+                inClass: newListRegisteredClassInSemester.map((i) => i._id),
                 sid: student._id,
             },
         })
         if (response) {
             message.success('Đăng ký lớp thành công!')
+            setListRegisteredInSemester(newListRegisteredClassInSemester)
             fetchData()
         } else {
             message.error('Đăng ký lớp thất bại!')
@@ -204,13 +248,6 @@ export default function RegisterClassTab(props) {
     }
     const cancelModal = () => {
         setIsOpenModal(false)
-    }
-    const [currentSemester, setCurrentSemester] = useState(null)
-    const onChangeSemester = (value) => {
-        setCurrentSemester(value)
-        setListClassInSemester(
-            listClass.filter((i) => i.semester.toString() === value.toString())
-        )
     }
 
     const formatDateFunc = (date) => {
@@ -285,7 +322,7 @@ export default function RegisterClassTab(props) {
                     Thêm
                 </Button>
             </Input.Group>
-            <Table columns={columns} dataSource={listRegisterClass} />
+            <Table columns={columns} dataSource={newListRegisteredClassInSemester} />
             <Space
                 style={{
                     width: '100%',
