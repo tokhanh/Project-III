@@ -11,7 +11,7 @@ const studentSchema = new mongoose.Schema({
         required: true,
     },
     status: {
-        type: String,
+        type: Number,
         required: true,
     },
     yearOfAdmission: {
