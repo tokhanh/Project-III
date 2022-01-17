@@ -158,7 +158,7 @@ export default function ClassManagement() {
         if (response) {
             const _data = response.data.content.map((i) => ({
                 _id: i._id,
-                key: i.code,
+                key: i._id,
                 code: i.code,
                 subject: i.subjectId,
                 subjectName: i.subjectId.name,
@@ -274,6 +274,14 @@ export default function ClassManagement() {
         /* eslint-disable-next-line */
     }, [])
 
+    const [selectRowKey, setSelectRowKey] = useState([])
+    const onSelectChange = (selectRowKey) => {
+        setSelectRowKey(selectRowKey)
+    }
+    const rowSelection = {
+        selectRowKey,
+        onChange: onSelectChange,
+    }
     return (
         <>
             <div
@@ -296,12 +304,17 @@ export default function ClassManagement() {
                         ))}
                     </Select>
                 </div>
-                <Button
-                    onClick={handleOpenCreateClassModal}
-                    disabled={!semester}
-                >
-                    Thêm lớp
-                </Button>
+                <div>
+                    <Button disabled={!selectRowKey.length}>
+                        Xóa các lớp đã chọn
+                    </Button>
+                    <Button
+                        onClick={handleOpenCreateClassModal}
+                        disabled={!semester}
+                    >
+                        Thêm lớp
+                    </Button>
+                </div>
             </div>
             <div
                 style={{
@@ -321,6 +334,7 @@ export default function ClassManagement() {
                 />
             </div>
             <Table
+                rowSelection={rowSelection}
                 dataSource={[...listClassInSemester]}
                 columns={columns}
                 bordered
@@ -337,6 +351,7 @@ export default function ClassManagement() {
                 <EditClassForm
                     data={currentEditClassData}
                     handleCancelEditModal={handleCancelEditModal}
+                    listClassInSemester={listClassInSemester}
                     updateClassService={updateClassService}
                 />
             </Modal>

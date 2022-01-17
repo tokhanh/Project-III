@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Input, Form, Select, Button } from 'antd'
+import { Input, Form, Select, Button, message } from 'antd'
 import styled from 'styled-components'
 
 const { Option } = Select
 
 export default function EditClassForm(props) {
-    const { data, handleCancelEditModal, updateClassService } = props
+    const {
+        data,
+        handleCancelEditModal,
+        updateClassService,
+        listClassInSemester,
+    } = props
     const [currentClass, setCurrentClass] = useState({
         _id: data._id,
         code: data.code,
@@ -70,7 +75,37 @@ export default function EditClassForm(props) {
             },
         })
     }
+    
+    const validateDuplicateTime = () => {
+        const listClassInTheSamePlace = listClassInSemester.filter(
+            (i) =>
+                i.position?.trim().toString() ===
+                currentClass?.position.trim().toString()
+        )
+        console.log(listClassInTheSamePlace)
+        let existedTime = listClassInTheSamePlace.find(
+            (i) =>
+                i.defaultTime?.day?.toString() ===
+                    currentClass?.defaultTime.day?.toString() &&
+                i.defaultTime.shift.toString() ===
+                    currentClass?.defaultTime?.shift?.toString()
+        )
+        return existedTime
+    }
 
+    const handleUpdateClass = () => {
+        let duplicateClass = validateDuplicateTime()
+        if (duplicateClass) {
+            message.error(
+                `Trùng thời khóa biểu và địa điểm của lớp: ${duplicateClass.subjectName}- Mã lớp: ${duplicateClass.code}`
+            )
+            return
+        }
+        updateClassService(currentClass)
+        handleCancelEditModal()
+    }
+
+    console.log(currentClass)
     return (
         <>
             <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
@@ -133,10 +168,7 @@ export default function EditClassForm(props) {
                 </Button>
                 <Button
                     style={{ margin: '5px' }}
-                    onClick={(_) => {
-                        updateClassService(currentClass)
-                        handleCancelEditModal()
-                    }}
+                    onClick={(_) => handleUpdateClass()}
                 >
                     Lưu
                 </Button>
