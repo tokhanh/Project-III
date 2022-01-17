@@ -43,6 +43,7 @@ export default function ProfileAndEducationProgram() {
                     code: response.data.content[0].educationProgram[0]?.code,
                     name: response.data.content[0].student[0]?.name,
                     subjects: response.data.content[0]?.subjects,
+                    limitOfCredits: response.data.content[0]?.educationProgram[0]?.maxLimitOfCredit
                 },
                 registerUnitOfStudies: response.data.content[0]?.student[0]?.registerUnitOfStudies,
             })

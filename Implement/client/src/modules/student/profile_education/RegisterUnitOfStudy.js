@@ -14,10 +14,11 @@ const formatDate = 'DD/MM/YYYY HH:mm:ss'
 
 export default function RegisterUnitOfStudyTab() {
     const { listSemester } = useGlobalContext()
-    const { educationProgram, student } = useStudentContext()
+    const { educationProgram, student, studentInfomation } = useStudentContext()
 
     const [listRegister, setListRegister] = useState([])
     const [listRegisterInSemester, setListRegisterInSemester] = useState([])
+
     const [currentSemester, setCurrentSemester] = useState(null)
     const onChangeSemester = (value) => {
         setListRegisterInSemester(
@@ -44,24 +45,6 @@ export default function RegisterUnitOfStudyTab() {
         if (response) {
             const receiveData = response.data.content
             setListRegister(receiveData)
-            if (currentSemester) {
-                setListRegisterInSemester(
-                    receiveData
-                        .filter(
-                            (i) =>
-                                i.semester.toString() ===
-                                currentSemester.toString()
-                        )
-                        .map((i) => ({
-                            key: i.subject._id,
-                            _id: i.subject._id,
-                            code: i.subject.code,
-                            name: i.subject.name,
-                            credit: i.subject.credit,
-                            institude: i.subject.institude,
-                        }))
-                )
-            }
         } else {
             message.error('Lấy danh sách đăng ký học phần thất bại!')
         }
@@ -127,7 +110,7 @@ export default function RegisterUnitOfStudyTab() {
             message.error('Trùng mã học phần!')
             return
         }
-        if (!checkLimitedCredit(listRegisterInSemester, subject)) {
+        if (!checkLimitedCredit(listRegisterInSemester, subject, studentInfomation.educationProgram.limitOfCredits)) {
             message.error('Giới hạn tín chỉ tối đa !!')
             return
         }
@@ -248,6 +231,12 @@ export default function RegisterUnitOfStudyTab() {
         }
     }
 
+    const countCredit = (list = []) => {
+        let count = 0
+        list.forEach(i => count = Number(i?.credit) + count)
+        return count
+    }
+    
     return (
         <div>
             <div style={{ marginBottom: '20px' }}>
@@ -281,6 +270,7 @@ export default function RegisterUnitOfStudyTab() {
                     Thêm
                 </Button>
             </Input.Group>
+            {currentSemester && <Text type="secondary">Số lượng tín chỉ đăng ký: {countCredit(listRegisterInSemester)}</Text>}
             <Table columns={columns} dataSource={listRegisterInSemester} />
             <Space
                 style={{
