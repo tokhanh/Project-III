@@ -25,13 +25,7 @@ const studentSchema = new mongoose.Schema({
     institude: {
         type: mongoose.Types.ObjectId,
         ref: 'Institude',
-    },
-    registerUnitOfStudies: [
-        {
-            type: mongoose.Types.ObjectId,
-            ref: 'Subject',
-        },
-    ],
+    }
 })
 
 const Student = mongoose.model('Student', studentSchema)

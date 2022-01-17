@@ -22,7 +22,6 @@ export default function ProfileAndEducationProgram() {
         student: {},
         institude: {},
         educationProgram: {},
-        registerUnitOfStudies: []
     })
 
     async function fetchStudentProfile() {
@@ -45,7 +44,6 @@ export default function ProfileAndEducationProgram() {
                     subjects: response.data.content[0]?.subjects,
                     limitOfCredits: response.data.content[0]?.educationProgram[0]?.maxLimitOfCredit
                 },
-                registerUnitOfStudies: response.data.content[0]?.student[0]?.registerUnitOfStudies,
             })
             setLoading(false)
         } else {
@@ -65,7 +63,6 @@ export default function ProfileAndEducationProgram() {
         student: studentInfomation.student,
         educationProgram: studentInfomation.educationProgram,
         institude: studentInfomation.institude,
-        registerUnitOfStudies: studentInfomation.registerUnitOfStudies
     }
     return (
         <StudentContext.Provider value={value}>
