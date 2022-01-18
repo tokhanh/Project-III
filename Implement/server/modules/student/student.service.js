@@ -3,6 +3,7 @@ const User = require('../../models/user.model')
 const mongoose = require('mongoose')
 const Class = require('../../models/class.model')
 const Term = require('../../models/term.model')
+const EducationProgram = require('../../models/educationProgram.model')
 
 const getStudentProfile = async (params = {}) => {
     const { id } = params
@@ -50,27 +51,36 @@ const getStudentProfile = async (params = {}) => {
                 foreignField: '_id',
                 as: 'subjects',
             },
-        },
+        }
     ])
+    const listSubject = await EducationProgram.find({_id: student[0].educationProgram[0]._id}).populate({
+        path: 'subjects',
+        populate: {
+            path: 'institude'
+        }
+    })
 
-    return student
+    return {
+        student: student,
+        subjectInfo: listSubject[0].subjects
+    }
 }
 
 const getListRegisteredUnit = async (params = {}) => {
     const { studentId } = params
     const result = await Term.find({
-        studentId: studentId
+        studentId: studentId,
     }).populate({
-        path: 'subject'
+        path: 'subject',
     })
     return result
 }
 
 const updateListRegisterUnit = async (data = {}) => {
     const { studentId, listRegister } = data
-    await Term.deleteMany({studentId: studentId})
+    await Term.deleteMany({ studentId: studentId })
     await Term.insertMany(listRegister)
-    return "true"
+    return 'true'
 }
 
 const updateClass = async (data = {}) => {
@@ -88,7 +98,7 @@ const updateClass = async (data = {}) => {
     await Class.updateMany(
         {
             _id: {
-                $in: [...inClass.map(i => mongoose.Types.ObjectId(i))],
+                $in: [...inClass.map((i) => mongoose.Types.ObjectId(i))],
             },
         },
         {

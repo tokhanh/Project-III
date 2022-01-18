@@ -83,7 +83,7 @@ export default function RegisterClassTab(props) {
         const _string = string.toString().trim()
         //eslint-disable-next-line
         const openClass = listClassInSemester.find(
-            (i) => i.code.toString() == _string
+            (i) => i.code.toString() === _string.toString()
         )
         if (openClass) {
             return openClass

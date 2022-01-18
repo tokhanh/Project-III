@@ -36,13 +36,13 @@ export default function ProfileAndEducationProgram() {
         if (response) {
             setStudentInformation({
                 ...studentInfomation,
-                institude: response.data.content[0]?.institude[0],
-                student: response.data.content[0]?.student[0],
+                institude: response.data.content.student[0]?.institude[0],
+                student: response.data.content.student[0]?.student[0],
                 educationProgram: {
-                    code: response.data.content[0].educationProgram[0]?.code,
-                    name: response.data.content[0].student[0]?.name,
-                    subjects: response.data.content[0]?.subjects,
-                    limitOfCredits: response.data.content[0]?.educationProgram[0]?.maxLimitOfCredit
+                    code: response.data.content.student[0].educationProgram[0]?.code,
+                    name: response.data.content.student[0].student[0]?.name,
+                    subjects: response.data.content.subjectInfo,
+                    limitOfCredits: response.data.content.student[0]?.educationProgram[0]?.maxLimitOfCredit
                 },
             })
             setLoading(false)

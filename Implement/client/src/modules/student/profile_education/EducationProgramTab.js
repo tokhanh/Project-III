@@ -1,6 +1,8 @@
-import { Table } from 'antd'
+import { Table, Typography } from 'antd'
 import React, { useState } from 'react'
 import { useStudentContext } from './ProfileAndEducationProgram'
+
+const { Title } = Typography
 
 export default function EducationProgramTab() {
     const { educationProgram } = useStudentContext()
@@ -11,6 +13,7 @@ export default function EducationProgramTab() {
             code: i.code,
             name: i.name,
             credit: i.credit,
+            institudeCode: i.institude.institudeCode,
         }))
     )
     const columns = [
@@ -29,11 +32,19 @@ export default function EducationProgramTab() {
             dataIndex: 'credit',
             key: 'credit',
         },
+        {
+            title: 'Viện đào tạo',
+            dataIndex: 'institudeCode',
+            key: 'institudeCode',
+        },
     ]
 
     return (
         <div>
-            <Table dataSource={listSubject} columns={columns}/>
+            <Title level={5}>
+                Thông tin chương trình đào tạo {educationProgram.code}
+            </Title>
+            <Table dataSource={listSubject} columns={columns} />
         </div>
     )
 }
