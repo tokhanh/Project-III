@@ -26,7 +26,7 @@ export default function Class() {
             },
         })
         if (response) {
-            setStudent(response.data.content[0])
+            setStudent(response.data.content.student[0])
         } else {
             message.error('Fetch student data failed!')
         }

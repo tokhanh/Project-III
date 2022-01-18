@@ -47,6 +47,7 @@ export default function RegisterClassTab(props) {
         const _listClassInSemeter = listClass.filter(
             (i) => i.semester.toString() === value.toString()
         )
+
         setListClassInSemester(_listClassInSemeter)
         setListRegisteredInSemester(
             _listClassInSemeter
