@@ -67,7 +67,7 @@ const getStudentProfile = async (params = {}) => {
 }
 
 const getListRegisteredUnit = async (params = {}) => {
-    const { studentId } = params
+    const { studentId, semester } = params
     const result = await Term.find({
         studentId: studentId,
     }).populate({

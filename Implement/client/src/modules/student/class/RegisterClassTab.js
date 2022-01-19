@@ -67,7 +67,10 @@ export default function RegisterClassTab(props) {
                 )
                 .filter((i) => i)
         )
-        fetchListUnitOfStudy({ studentId: student.studentId })
+        fetchListUnitOfStudy({
+            studentId: student.studentId,
+            semester: currentSemester,
+        })
     }
 
     const checkIsChangeRegisterClass = () => {
@@ -134,6 +137,34 @@ export default function RegisterClassTab(props) {
             )
             let endTime = moment(
                 formatDateFunc(timePrioty?.endTime),
+                formatDate
+            )
+            let now = moment(formatDateFunc(new Date()), formatDate)
+            if (!startTime.isValid() || !endTime.isValid()) {
+                return false
+            } else {
+                if (startTime.isBefore(now) && endTime.isAfter(now)) {
+                    return true
+                }
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+
+    const validateAdjustedTime = () => {
+        let _csemester = listSemester.find(
+            (i) => i?.semester?.toString() === currentSemester?.toString()
+        )
+        let timeAdjusted = _csemester?.registerAdjustedClassTime
+        if (timeAdjusted) {
+            let startTime = moment(
+                formatDateFunc(timeAdjusted?.startTime),
+                formatDate
+            )
+            let endTime = moment(
+                formatDateFunc(timeAdjusted?.endTime),
                 formatDate
             )
             let now = moment(formatDateFunc(new Date()), formatDate)
@@ -245,7 +276,7 @@ export default function RegisterClassTab(props) {
             data: {
                 inClass: newListRegisteredClassInSemester.map((i) => i._id),
                 sid: student._id,
-                semester: currentSemester
+                semester: currentSemester,
             },
         })
         if (response) {
@@ -278,32 +309,7 @@ export default function RegisterClassTab(props) {
         return `${day}/${month}/${year} ${hour}:${minutes}:${seconds}`
     }
     const validateTimeToRegisterClass = () => {
-        let _csemester = listSemester.find(
-            (i) => i?.semester?.toString() === currentSemester?.toString()
-        )
-        let timePrioty = _csemester?.registerPriotyClassTime
-        let timeAdjusted = _csemester?.registerAdjustedClassTime
-        if (timePrioty && timeAdjusted) {
-            let startTime = moment(
-                formatDateFunc(timePrioty?.startTime),
-                formatDate
-            )
-            let endTime = moment(
-                formatDateFunc(timeAdjusted?.endTime),
-                formatDate
-            )
-            let now = moment(formatDateFunc(new Date()), formatDate)
-            if (!startTime.isValid() || !endTime.isValid()) {
-                return false
-            } else {
-                if (startTime.isBefore(now) && endTime.isAfter(now)) {
-                    return true
-                }
-                return false
-            }
-        } else {
-            return false
-        }
+        return validatePriotyTime() || validateAdjustedTime()
     }
 
     return (
