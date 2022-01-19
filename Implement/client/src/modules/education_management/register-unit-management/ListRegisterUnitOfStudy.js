@@ -87,7 +87,7 @@ export default function ListRegisterUnitOfStudy() {
 
     return (
         <React.Fragment>
-            <div style={{ marginLeft: '20px' }}>
+            <div style={{ marginLeft: '20px', marginBottom: '20px' }}>
                 <Title level={5}>Kỳ học</Title>
                 <Select style={{ width: 150 }} onChange={handleChangeSemester}>
                     {listTimestamp.map((i) => (
@@ -97,7 +97,7 @@ export default function ListRegisterUnitOfStudy() {
                     ))}
                 </Select>
             </div>
-            <div>
+            <div style={{margin: '0 20px'}}>
                 <Table columns={columns} dataSource={data}></Table>
             </div>
         </React.Fragment>

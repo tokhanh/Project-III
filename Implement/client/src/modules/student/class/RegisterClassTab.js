@@ -67,13 +67,15 @@ export default function RegisterClassTab(props) {
                 )
                 .filter((i) => i)
         )
-        fetchListUnitOfStudy({studentId: student.studentId})
+        fetchListUnitOfStudy({ studentId: student.studentId })
     }
 
     const checkIsChangeRegisterClass = () => {
         return (
             JSON.stringify(listRegisteredInSemester.sort((a, b) => a - b)) ===
-            JSON.stringify(newListRegisteredClassInSemester.sort((a, b) => a - b))
+            JSON.stringify(
+                newListRegisteredClassInSemester.sort((a, b) => a - b)
+            )
         )
     }
 
@@ -114,7 +116,10 @@ export default function RegisterClassTab(props) {
     }
 
     const checkSubjectCodeIsExistedInListRegisterUnit = (registerClass) => {
-        return listRegisterUnitOfStudy.find((i) => i.subject._id.toString() === registerClass.subjectId.toString())
+        return listRegisterUnitOfStudy.find(
+            (i) =>
+                i.subject._id.toString() === registerClass.subjectId.toString()
+        )
     }
 
     const validatePriotyTime = () => {
@@ -152,7 +157,12 @@ export default function RegisterClassTab(props) {
             message.error('Mã lớp không tồn tại!')
             return
         }
-        if (checkIsExistedCode(newListRegisteredClassInSemester, registerClass._id)) {
+        if (
+            checkIsExistedCode(
+                newListRegisteredClassInSemester,
+                registerClass._id
+            )
+        ) {
             message.error('Trùng mã lớp!')
             return
         }
@@ -171,11 +181,16 @@ export default function RegisterClassTab(props) {
                 return
             }
         }
-        setNewRegisteredClassInSemester([...newListRegisteredClassInSemester, registerClass])
+        setNewRegisteredClassInSemester([
+            ...newListRegisteredClassInSemester,
+            registerClass,
+        ])
     }
 
     const handleRemoveClass = (id) => {
-        setNewRegisteredClassInSemester(newListRegisteredClassInSemester.filter((i) => i._id !== id))
+        setNewRegisteredClassInSemester(
+            newListRegisteredClassInSemester.filter((i) => i._id !== id)
+        )
     }
     const columns = [
         {
@@ -292,7 +307,7 @@ export default function RegisterClassTab(props) {
 
     return (
         <div>
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ margin: '0 10px' }}>
                 <Title level={5}>Chọn kỳ học</Title>
                 <Select style={{ width: 150 }} onChange={onChangeSemester}>
                     {listSemester.map((i) => (
@@ -309,21 +324,28 @@ export default function RegisterClassTab(props) {
                         : ''}
                 </Text>
             </div>
-            <Input.Group compact>
-                <Input
-                    style={{ width: '200px' }}
-                    placeholder="Nhập mã lớp"
-                    onChange={handleChangeCode}
+            <div style={{ margin: '10px 10px' }}>
+                <Input.Group compact>
+                    <Input
+                        style={{ width: '200px' }}
+                        placeholder="Nhập mã lớp"
+                        onChange={handleChangeCode}
+                    />
+                    <Button
+                        type="primary"
+                        onClick={handleAddClass}
+                        disabled={!validateTimeToRegisterClass()}
+                    >
+                        Thêm
+                    </Button>
+                </Input.Group>
+            </div>
+            <div style={{ margin: '0 10px' }}>
+                <Table
+                    columns={columns}
+                    dataSource={newListRegisteredClassInSemester}
                 />
-                <Button
-                    type="primary"
-                    onClick={handleAddClass}
-                    disabled={!validateTimeToRegisterClass()}
-                >
-                    Thêm
-                </Button>
-            </Input.Group>
-            <Table columns={columns} dataSource={newListRegisteredClassInSemester} />
+            </div>
             <Space
                 style={{
                     width: '100%',

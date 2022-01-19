@@ -8,7 +8,6 @@ const { Search } = Input
 export default function OpenClassTab(props) {
     const { listSemester } = props
     const { listClass } = useClassContext()
-    
 
     const columns = [
         {
@@ -55,8 +54,10 @@ export default function OpenClassTab(props) {
 
     const [classCodeKeySearch, setClassCodeKeySearch] = useState('')
     const [subjectCodeKeySearch, setSubjectCodeKeySearch] = useState('')
-    const handleChangeSubjectCodeKeySearch = (e) => setSubjectCodeKeySearch(e.target.value)
-    const handleChangeClassCodeKeySearch = (e) => setClassCodeKeySearch(e.target.value)
+    const handleChangeSubjectCodeKeySearch = (e) =>
+        setSubjectCodeKeySearch(e.target.value)
+    const handleChangeClassCodeKeySearch = (e) =>
+        setClassCodeKeySearch(e.target.value)
 
     const handleSubjectCodeSearch = () => {
         let keyCode = new RegExp(`${subjectCodeKeySearch}`, 'gi')
@@ -79,7 +80,6 @@ export default function OpenClassTab(props) {
         )
     }
 
-
     const [currentSemester, setCurrentSemester] = useState(null)
     const [listClassInSemester, setListClassInSemester] = useState([])
     const onChangeSemester = (value) => {
@@ -91,7 +91,7 @@ export default function OpenClassTab(props) {
 
     return (
         <>
-            <div>
+            <div style={{ margin: '0 10px' }}>
                 <Title level={5}>Chọn kỳ học</Title>
                 <Select style={{ width: 150 }} onChange={onChangeSemester}>
                     {listSemester.map((i) => (
@@ -104,7 +104,7 @@ export default function OpenClassTab(props) {
             <div
                 style={{
                     display: 'flex',
-                    padding: '10px',
+                    margin: '10px 10px',
                 }}
             >
                 <Search
@@ -118,13 +118,15 @@ export default function OpenClassTab(props) {
                     onChange={handleChangeSubjectCodeKeySearch}
                 />
             </div>
-            <Table
-                dataSource={listClassInSemester}
-                columns={columns}
-                bordered
-                title={() => ''}
-                footer={() => ''}
-            />
+            <div style={{ margin: '0 10px' }}>
+                <Table
+                    dataSource={listClassInSemester}
+                    columns={columns}
+                    bordered
+                    title={() => ''}
+                    footer={() => ''}
+                />
+            </div>
         </>
     )
 }

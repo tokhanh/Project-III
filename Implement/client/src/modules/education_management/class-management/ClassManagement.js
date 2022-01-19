@@ -287,7 +287,7 @@ export default function ClassManagement() {
             <div
                 style={{
                     display: 'flex',
-                    padding: '10px',
+                    margin: '0 20px',
                     justifyContent: 'space-between',
                 }}
             >
@@ -305,12 +305,18 @@ export default function ClassManagement() {
                     </Select>
                 </div>
                 <div>
-                    <Button disabled={!selectRowKey.length}>
+                    <Button
+                        style={{ marginRight: '10px' }}
+                        disabled={!selectRowKey.length}
+                        type="primary"
+                        danger
+                    >
                         Xóa các lớp đã chọn
                     </Button>
                     <Button
                         onClick={handleOpenCreateClassModal}
                         disabled={!semester}
+                        type="primary"
                     >
                         Thêm lớp
                     </Button>
@@ -319,7 +325,7 @@ export default function ClassManagement() {
             <div
                 style={{
                     display: 'flex',
-                    padding: '10px',
+                    margin: '10px 20px'
                 }}
             >
                 <Search
@@ -333,14 +339,16 @@ export default function ClassManagement() {
                     onChange={handleChangeSubjectCodeKeySearch}
                 />
             </div>
-            <Table
-                rowSelection={rowSelection}
-                dataSource={[...listClassInSemester]}
-                columns={columns}
-                bordered
-                title={() => ''}
-                footer={() => ''}
-            />
+            <div style={{margin: '0 20px'}}>
+                <Table
+                    rowSelection={rowSelection}
+                    dataSource={[...listClassInSemester]}
+                    columns={columns}
+                    bordered
+                    title={() => ''}
+                    footer={() => ''}
+                />
+            </div>
             <Modal
                 visible={isOpenEditModal}
                 onCancel={handleCancelEditModal}

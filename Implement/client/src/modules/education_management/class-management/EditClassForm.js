@@ -75,7 +75,7 @@ export default function EditClassForm(props) {
             },
         })
     }
-    
+
     const validateDuplicateTime = () => {
         const listClassInTheSamePlace = listClassInSemester.filter(
             (i) =>
@@ -167,6 +167,7 @@ export default function EditClassForm(props) {
                     Hủy bỏ
                 </Button>
                 <Button
+                    type="primary"
                     style={{ margin: '5px' }}
                     onClick={(_) => handleUpdateClass()}
                 >

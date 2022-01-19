@@ -231,7 +231,7 @@ export default function StudyPlan() {
                         type="number"
                         onChange={(e) => setNewSemester(e.target.value)}
                     />
-                    <Button onClick={handleOpenConfirmModal}>Thêm</Button>
+                    <Button onClick={handleOpenConfirmModal} type='primary'>Thêm</Button>
                 </div>
             </Block>
             <Block>

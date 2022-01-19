@@ -136,7 +136,7 @@ export default function ManageStudentOfClass(props) {
                             </Option>
                         ))}
                     </Select>
-                    <Button type="primary" onClick={handleSubmitAddStudent}>
+                    <Button type="primary" onClick={handleSubmitAddStudent} disabled={!currentAddStudent}>
                         Thêm
                     </Button>
                 </div>
