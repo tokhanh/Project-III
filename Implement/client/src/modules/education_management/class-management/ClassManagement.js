@@ -283,7 +283,8 @@ export default function ClassManagement() {
         onChange: onSelectChange,
     }
     return (
-        <>
+        <React.Fragment>
+            <Title level={4} style={{margin: '0 10px 20px 10px'}}>Quản lý lớp học</Title>
             <div
                 style={{
                     display: 'flex',
@@ -401,6 +402,6 @@ export default function ClassManagement() {
                 {currentRemoveClass?.subjectCode} -{' '}
                 {currentRemoveClass?.subjectName})?
             </Modal>
-        </>
+        </React.Fragment>
     )
 }

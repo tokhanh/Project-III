@@ -3,9 +3,13 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainLayout from '../layout/MainLayout'
 import Page404 from '../layout/Page404'
 import ClassManagement from '../modules/education_management/class-management/ClassManagement'
+import EducationManagement from '../modules/education_management/education-management/EducationManagement'
 import RegisterUnitManagement from '../modules/education_management/register-unit-management/RegisterUnitManagement'
+import StudentManagement from '../modules/education_management/student-management/StudentManagement'
 import Class from '../modules/student/class/Class'
 import ProfileAndEducationProgram from '../modules/student/profile_education/ProfileAndEducationProgram'
+import Result from '../modules/student/result/Result'
+import Timetable from '../modules/student/timetable/Timetable'
 import Home from '../modules/users/Home'
 import Login from '../modules/users/Login'
 import AdminRoute from './AdminRoute'
@@ -45,6 +49,22 @@ export default function Routers() {
                     }
                 />
                 <Route
+                    path="/timetable"
+                    element={
+                        <PrivateRoute
+                            component={<MainLayout component={<Timetable />} />}
+                        />
+                    }
+                />
+                <Route
+                    path="/result"
+                    element={
+                        <PrivateRoute
+                            component={<MainLayout component={<Result />} />}
+                        />
+                    }
+                />
+                <Route
                     path="/register-unit-of-study-management"
                     element={
                         <AdminRoute
@@ -63,6 +83,30 @@ export default function Routers() {
                             component={
                                 <MainLayout
                                     component={<ClassManagement />}
+                                />
+                            }
+                        />
+                    }
+                />
+                <Route
+                    path="/student-management"
+                    element={
+                        <AdminRoute
+                            component={
+                                <MainLayout
+                                    component={<StudentManagement />}
+                                />
+                            }
+                        />
+                    }
+                />
+                <Route
+                    path="/education-management"
+                    element={
+                        <AdminRoute
+                            component={
+                                <MainLayout
+                                    component={<EducationManagement />}
                                 />
                             }
                         />

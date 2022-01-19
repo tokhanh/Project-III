@@ -9,15 +9,46 @@ export default function MainLayout({ component }) {
     const { logout, isAdmin } = useGlobalContext()
 
     const studentLinkList = [
-        { path: '/', to: 'Trang chủ' },
-        { path: '/profile-and-education-program', to: 'Hồ sơ' },
-        { path: '/class', to: 'Lớp học' },
+        { path: '/', to: 'Trang chủ', icon: <i className="fas fa-home" /> },
+        {
+            path: '/profile-and-education-program',
+            to: 'Hồ sơ',
+            icon: <i className="fas fa-book" />,
+        },
+        { path: '/class', to: 'Lớp học', icon: <i className="fas fa-edit" /> },
+        {
+            path: '/timetable',
+            to: 'Thời khóa biểu',
+            icon: <i className="fas fa-calendar" />,
+        },
+        {
+            path: '/result',
+            to: 'Kết quả học tập',
+            icon: <i className="fas fa-poll" />,
+        },
     ]
 
     const adminLinkList = [
-        { path: '/register-unit-of-study-management', to: 'Quản lý kế hoạch học tập' },
-        { path: '/class-management', to: 'Quản lý lớp học' },
-        // { path: '/education-management', to: 'Education Management' },
+        {
+            path: '/register-unit-of-study-management',
+            to: 'Quản lý kế hoạch học tập',
+            icon: <i className="fas fa-calendar-alt" />,
+        },
+        {
+            path: '/class-management',
+            to: 'Quản lý lớp học',
+            icon: <i className="fas fa-edit" />,
+        },
+        {
+            path: '/student-management',
+            to: 'Quản lý sinh viên',
+            icon: <i className="fas fa-user" />,
+        },
+        {
+            path: '/education-management',
+            to: 'Quản lý chương trình đào tạo',
+            icon: <i className="fas fa-book" />,
+        },
     ]
     const [linkList, setLinkList] = useState([])
 
@@ -43,6 +74,7 @@ export default function MainLayout({ component }) {
     return (
         <Layout>
             <Sider
+                width={240}
                 style={{
                     overflow: 'auto',
                     height: '100vh',
@@ -64,7 +96,9 @@ export default function MainLayout({ component }) {
                 >
                     {linkList.map((i) => (
                         <Menu.Item key={i.path}>
-                            <Link to={i.path}>{i.to}</Link>
+                            <Link to={i.path}>
+                                {i.icon} {i.to}
+                            </Link>
                         </Menu.Item>
                     ))}
                 </Menu>
@@ -90,7 +124,7 @@ export default function MainLayout({ component }) {
                 </Header>
                 <Content
                     style={{
-                        margin: '24px 0 0 50px',
+                        margin: '24px 0 0 90px',
                         minHeight: '90vh',
                     }}
                 >

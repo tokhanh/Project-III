@@ -40,12 +40,11 @@ export default function StudyPlan() {
             url: 'http://localhost:4001/v1/training-department/timestamp',
             method: RequestMethods.POST,
             data: data,
-        }) 
+        })
         if (response) {
             message.success('Thêm học kỳ mới thành công!')
             setIsOpenConfirmModal(false)
-        }
-        else {
+        } else {
             message.error('Thêm học kỳ mới thất bại!')
         }
     }
@@ -231,7 +230,9 @@ export default function StudyPlan() {
                         type="number"
                         onChange={(e) => setNewSemester(e.target.value)}
                     />
-                    <Button onClick={handleOpenConfirmModal} type='primary'>Thêm</Button>
+                    <Button onClick={handleOpenConfirmModal} type="primary">
+                        Thêm
+                    </Button>
                 </div>
             </Block>
             <Block>
@@ -296,13 +297,18 @@ export default function StudyPlan() {
                 />
             </Block>
             <Block>
-                <Button onClick={() => handleUpdateTime(currentTimeStamp)}>
+                <Button
+                    onClick={() => handleUpdateTime(currentTimeStamp)}
+                    type="primary"
+                >
                     Lưu
                 </Button>
             </Block>
             <Modal
                 visible={isOpenConfirmModal}
-                onOk={() => handleAddSemesterSubmit({newSemester: newSemester})}
+                onOk={() =>
+                    handleAddSemesterSubmit({ newSemester: newSemester })
+                }
                 onCancel={handleCancelConfirmModal}
                 title="Thêm kỳ học"
                 okText="Thêm"
