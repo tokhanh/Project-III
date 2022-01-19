@@ -245,6 +245,7 @@ export default function RegisterClassTab(props) {
             data: {
                 inClass: newListRegisteredClassInSemester.map((i) => i._id),
                 sid: student._id,
+                semester: currentSemester
             },
         })
         if (response) {

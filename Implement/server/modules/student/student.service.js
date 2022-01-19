@@ -84,10 +84,10 @@ const updateListRegisterUnit = async (data = {}) => {
 }
 
 const updateClass = async (data = {}) => {
-    const { sid, inClass } = data
-    console.log(sid, inClass)
+    const { sid, inClass, semester } = data
+    
     await Class.updateMany(
-        {},
+        { semester: semester },
         {
             $pull: {
                 students: mongoose.Types.ObjectId(sid),
