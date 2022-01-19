@@ -9,7 +9,7 @@ const { TabPane } = Tabs
 export default function RegisterUnitManagement() {
     return (
         <React.Fragment>
-            <Title level={4} style={{margin: '0 20px 10px 20px'}}>Quản lý kế hoạch học tập</Title>
+            <Title level={4} style={{margin: '0 20px 10px 10px'}}>Quản lý kế hoạch học tập</Title>
             <Tabs type="card">
                 <TabPane tab="Kế hoạch học tập" key="1">
                     <StudyPlan />

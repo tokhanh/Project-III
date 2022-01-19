@@ -284,7 +284,7 @@ export default function ClassManagement() {
     }
     return (
         <React.Fragment>
-            <Title level={4} style={{margin: '0 10px 20px 10px'}}>Quản lý lớp học</Title>
+            <Title level={4} style={{margin: '0 10px 20px 20px'}}>Quản lý lớp học</Title>
             <div
                 style={{
                     display: 'flex',
