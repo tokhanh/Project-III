@@ -77,8 +77,8 @@ const getListRegisteredUnit = async (params = {}) => {
 }
 
 const updateListRegisterUnit = async (data = {}) => {
-    const { studentId, listRegister } = data
-    await Term.deleteMany({ studentId: studentId })
+    const { studentId, listRegister, semester } = data
+    await Term.deleteMany({ studentId: studentId, semester: semester })
     await Term.insertMany(listRegister)
     return 'true'
 }

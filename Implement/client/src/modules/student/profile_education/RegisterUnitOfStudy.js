@@ -52,6 +52,7 @@ export default function RegisterUnitOfStudyTab() {
     useEffect(() => {
         return fetchListUnitOfStudy({
             studentId: student.studentId,
+            semester: currentSemester
         })
         /* eslint-disable-next-line */
     }, [])
@@ -169,6 +170,7 @@ export default function RegisterUnitOfStudyTab() {
             subject: i._id,
         }))
         return {
+            semester: currentSemester,
             studentId: student.studentId,
             listRegister: _listRegister,
         }
