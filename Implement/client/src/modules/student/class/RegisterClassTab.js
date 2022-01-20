@@ -21,7 +21,7 @@ const formatDate = 'DD/MM/YYYY HH:mm:ss'
 export default function RegisterClassTab(props) {
     const { listSemester } = props
     const { listClass, student, fetchData, studentFullInfo } = useClassContext()
-    
+
     const [listClassInSemester, setListClassInSemester] = useState([])
     const [currentSemester, setCurrentSemester] = useState(null)
     const [listRegisteredInSemester, setListRegisteredInSemester] = useState([])
@@ -85,10 +85,17 @@ export default function RegisterClassTab(props) {
     const [classCode, setClassCode] = useState('')
     const handleChangeCode = (e) => setClassCode(e.target.value)
 
+    const checkStudentIsOnTheRegisterList = () => {
+        return studentFullInfo.student[0].status === 1
+    }
+
     const checkLimitedCredit = (list = [], subject, limitCredit = 12) => {
         let count = 0
         list.forEach((i) => (count = count + Number(i.credit)))
         return count + Number(subject.credit) <= limitCredit
+    }
+    const checkLimitedNumberRegister = (a = 0, b = 0) => {
+        return a < b
     }
 
     const validationClassCode = (string = '') => {
@@ -209,7 +216,22 @@ export default function RegisterClassTab(props) {
             )
             return
         }
-        if (!checkLimitedCredit(newListRegisteredClassInSemester, registerClass, Number(studentFullInfo.educationProgram[0].maxLimitOfCredit))) {
+        if (
+            !checkLimitedNumberRegister(
+                registerClass.numberRegisteredStudent,
+                registerClass.maximum
+            )
+        ) {
+            message.error('Lớp đã đầy!')
+            return
+        }
+        if (
+            !checkLimitedCredit(
+                newListRegisteredClassInSemester,
+                registerClass,
+                Number(studentFullInfo.educationProgram[0].maxLimitOfCredit)
+            )
+        ) {
             message.error('Giới hạn tín chỉ tối đa !')
             return
         }
@@ -251,7 +273,7 @@ export default function RegisterClassTab(props) {
         {
             title: 'Tín chỉ',
             dataIndex: 'credit',
-            key: 'credit'
+            key: 'credit',
         },
         {
             title: 'Học kỳ',
@@ -276,7 +298,8 @@ export default function RegisterClassTab(props) {
                     {/* eslint-disable-next-line */}
                     <a
                         onClick={() =>
-                            !validateTimeToRegisterClass()
+                            !validateTimeToRegisterClass() ||
+                            !checkStudentIsOnTheRegisterList()
                                 ? {}
                                 : handleRemoveClass(record._id)
                         }
@@ -332,10 +355,9 @@ export default function RegisterClassTab(props) {
     }
     const countCredit = (list = []) => {
         let count = 0
-        list.forEach(i => count = Number(i?.credit) + count)
+        list.forEach((i) => (count = Number(i?.credit) + count))
         return count
     }
-    
 
     return (
         <div>
@@ -349,7 +371,9 @@ export default function RegisterClassTab(props) {
                     ))}
                 </Select>
                 <Text type="danger" style={{ marginLeft: '20px' }}>
-                    {!validateTimeToRegisterClass()
+                    {!checkStudentIsOnTheRegisterList()
+                        ? 'Bạn không có trong danh sách đăng ký!'
+                        : !validateTimeToRegisterClass()
                         ? !currentSemester
                             ? ''
                             : `Không phải thời điểm đăng ký lớp kỳ ${currentSemester}`
@@ -366,12 +390,20 @@ export default function RegisterClassTab(props) {
                     <Button
                         type="primary"
                         onClick={handleAddClass}
-                        disabled={!validateTimeToRegisterClass()}
+                        disabled={
+                            !validateTimeToRegisterClass() ||
+                            !checkStudentIsOnTheRegisterList()
+                        }
                     >
                         Thêm
                     </Button>
                 </Input.Group>
-                {currentSemester && <Text type="secondary">Số lượng tín chỉ đăng ký: {countCredit(newListRegisteredClassInSemester)}</Text>}
+                {currentSemester && (
+                    <Text type="secondary">
+                        Số lượng tín chỉ đăng ký:{' '}
+                        {countCredit(newListRegisteredClassInSemester)}
+                    </Text>
+                )}
             </div>
             <div style={{ margin: '0 10px' }}>
                 <Table
@@ -389,7 +421,10 @@ export default function RegisterClassTab(props) {
             >
                 <Button
                     type="primary"
-                    disabled={checkIsChangeRegisterClass()}
+                    disabled={
+                        checkIsChangeRegisterClass() ||
+                        !checkStudentIsOnTheRegisterList()
+                    }
                     onClick={confirm}
                 >
                     Đăng ký

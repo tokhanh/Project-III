@@ -52,7 +52,7 @@ export default function RegisterUnitOfStudyTab() {
     useEffect(() => {
         return fetchListUnitOfStudy({
             studentId: student.studentId,
-            semester: currentSemester
+            semester: currentSemester,
         })
         /* eslint-disable-next-line */
     }, [])
@@ -69,12 +69,22 @@ export default function RegisterUnitOfStudyTab() {
         return newArray
     }
 
+    const checkStudentIsOnTheRegisterList = () => {
+        return student.status === 1
+    }
+
     const checkChangeListRegisterSubject = () => {
         return (
             JSON.stringify(sortCodeStringArray(listRegisterInSemester)) ===
             JSON.stringify(
                 sortCodeStringArray(
-                    listRegister.filter(i => i.semester.toString() === currentSemester.toString()).map((i) => ({ ...i, _id: i.subject._id }))
+                    listRegister
+                        .filter(
+                            (i) =>
+                                i.semester.toString() ===
+                                currentSemester.toString()
+                        )
+                        .map((i) => ({ ...i, _id: i.subject._id }))
                 )
             )
         )
@@ -111,7 +121,13 @@ export default function RegisterUnitOfStudyTab() {
             message.error('Trùng mã học phần!')
             return
         }
-        if (!checkLimitedCredit(listRegisterInSemester, subject, studentInfomation.educationProgram.limitOfCredits)) {
+        if (
+            !checkLimitedCredit(
+                listRegisterInSemester,
+                subject,
+                studentInfomation.educationProgram.limitOfCredits
+            )
+        ) {
             message.error('Giới hạn tín chỉ tối đa !!')
             return
         }
@@ -151,9 +167,10 @@ export default function RegisterUnitOfStudyTab() {
                     {/* eslint-disable-next-line */}
                     <a
                         onClick={() =>
-                            !validateTimeToRegisterUnitOfStudy()
-                                ? {} :
-                            handleRemoveSubject(record)
+                            !validateTimeToRegisterUnitOfStudy() ||
+                            !checkStudentIsOnTheRegisterList()
+                                ? {}
+                                : handleRemoveSubject(record)
                         }
                     >
                         <Text type="danger">Remove</Text>
@@ -235,10 +252,10 @@ export default function RegisterUnitOfStudyTab() {
 
     const countCredit = (list = []) => {
         let count = 0
-        list.forEach(i => count = Number(i?.credit) + count)
+        list.forEach((i) => (count = Number(i?.credit) + count))
         return count
     }
-    
+
     return (
         <div>
             <div style={{ marginBottom: '20px' }}>
@@ -251,7 +268,9 @@ export default function RegisterUnitOfStudyTab() {
                     ))}
                 </Select>
                 <Text type="danger" style={{ marginLeft: '20px' }}>
-                    {!validateTimeToRegisterUnitOfStudy()
+                    {!checkStudentIsOnTheRegisterList()
+                        ? 'Bạn không có trong danh sách đăng ký!'
+                        : !validateTimeToRegisterUnitOfStudy()
                         ? !currentSemester
                             ? ''
                             : `Không phải thời điểm đăng ký học phần kỳ ${currentSemester}`
@@ -267,12 +286,21 @@ export default function RegisterUnitOfStudyTab() {
                 <Button
                     type="primary"
                     onClick={handleAddUnitOfStudy}
-                    disabled={!currentSemester || !validateTimeToRegisterUnitOfStudy()}
+                    disabled={
+                        !currentSemester ||
+                        !validateTimeToRegisterUnitOfStudy() ||
+                        !checkStudentIsOnTheRegisterList()
+                    }
                 >
                     Thêm
                 </Button>
             </Input.Group>
-            {currentSemester && <Text type="secondary">Số lượng tín chỉ đăng ký: {countCredit(listRegisterInSemester)}</Text>}
+            {currentSemester && (
+                <Text type="secondary">
+                    Số lượng tín chỉ đăng ký:{' '}
+                    {countCredit(listRegisterInSemester)}
+                </Text>
+            )}
             <Table columns={columns} dataSource={listRegisterInSemester} />
             <Space
                 style={{
@@ -284,7 +312,11 @@ export default function RegisterUnitOfStudyTab() {
             >
                 <Button
                     type="primary"
-                    disabled={!currentSemester || checkChangeListRegisterSubject()}
+                    disabled={
+                        !currentSemester ||
+                        checkChangeListRegisterSubject() ||
+                        !checkStudentIsOnTheRegisterList()
+                    }
                     onClick={confirmModal}
                 >
                     Đăng ký
