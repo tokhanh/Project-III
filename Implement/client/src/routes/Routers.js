@@ -7,10 +7,11 @@ import EducationManagement from '../modules/education_management/education-manag
 import RegisterUnitManagement from '../modules/education_management/register-unit-management/RegisterUnitManagement'
 import StudentManagement from '../modules/education_management/student-management/StudentManagement'
 import Class from '../modules/student/class/Class'
+import StudentHome from '../modules/student/home/StudentHome'
 import ProfileAndEducationProgram from '../modules/student/profile_education/ProfileAndEducationProgram'
 import Result from '../modules/student/result/Result'
 import Timetable from '../modules/student/timetable/Timetable'
-import Home from '../modules/users/Home'
+// import Home from '../modules/users/Home'
 import Login from '../modules/users/Login'
 import AdminRoute from './AdminRoute'
 import PrivateRoute from './PrivateRoute'
@@ -24,7 +25,7 @@ export default function Routers() {
                     path="/"
                     element={
                         <PrivateRoute
-                            component={<MainLayout component={<Home />} />}
+                            component={<MainLayout component={<StudentHome />} />}
                         />
                     }
                 />
