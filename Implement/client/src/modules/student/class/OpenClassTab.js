@@ -26,6 +26,11 @@ export default function OpenClassTab(props) {
             key: 'subjectCode',
         },
         {
+            title: 'Tín chỉ',
+            dataIndex: 'credit',
+            key: 'credit'
+        },
+        {
             title: 'Học kỳ',
             dataIndex: 'semester',
             key: 'semester',

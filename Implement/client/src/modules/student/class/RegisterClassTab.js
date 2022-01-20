@@ -20,14 +20,14 @@ const formatDate = 'DD/MM/YYYY HH:mm:ss'
 
 export default function RegisterClassTab(props) {
     const { listSemester } = props
-    const { listClass, student, fetchData } = useClassContext()
+    const { listClass, student, fetchData, studentFullInfo } = useClassContext()
+    
     const [listClassInSemester, setListClassInSemester] = useState([])
     const [currentSemester, setCurrentSemester] = useState(null)
     const [listRegisteredInSemester, setListRegisteredInSemester] = useState([])
     const [newListRegisteredClassInSemester, setNewRegisteredClassInSemester] =
         useState([])
     const [listRegisterUnitOfStudy, setListRegisterUnitOfStudy] = useState([])
-
     const fetchListUnitOfStudy = async (data = {}) => {
         const response = await sendRequest({
             method: RequestMethods.GET,
@@ -84,6 +84,12 @@ export default function RegisterClassTab(props) {
 
     const [classCode, setClassCode] = useState('')
     const handleChangeCode = (e) => setClassCode(e.target.value)
+
+    const checkLimitedCredit = (list = [], subject, limitCredit = 12) => {
+        let count = 0
+        list.forEach((i) => (count = count + Number(i.credit)))
+        return count + Number(subject.credit) <= limitCredit
+    }
 
     const validationClassCode = (string = '') => {
         const _string = string.toString().trim()
@@ -183,7 +189,6 @@ export default function RegisterClassTab(props) {
 
     const handleAddClass = () => {
         const registerClass = validationClassCode(classCode)
-
         if (!registerClass) {
             message.error('Mã lớp không tồn tại!')
             return
@@ -202,6 +207,10 @@ export default function RegisterClassTab(props) {
             message.error(
                 `Trùng thời khóa biểu ${duplicateClass.code} - ${duplicateClass.subjectName}`
             )
+            return
+        }
+        if (!checkLimitedCredit(newListRegisteredClassInSemester, registerClass, Number(studentFullInfo.educationProgram[0].maxLimitOfCredit))) {
+            message.error('Giới hạn tín chỉ tối đa !')
             return
         }
         if (validatePriotyTime()) {
@@ -233,6 +242,16 @@ export default function RegisterClassTab(props) {
             title: 'Lớp',
             dataIndex: 'subjectName',
             key: 'subjectName',
+        },
+        {
+            title: 'Mã môn học',
+            dataIndex: 'subjectCode',
+            key: 'subjectCode',
+        },
+        {
+            title: 'Tín chỉ',
+            dataIndex: 'credit',
+            key: 'credit'
         },
         {
             title: 'Học kỳ',
@@ -311,6 +330,12 @@ export default function RegisterClassTab(props) {
     const validateTimeToRegisterClass = () => {
         return validatePriotyTime() || validateAdjustedTime()
     }
+    const countCredit = (list = []) => {
+        let count = 0
+        list.forEach(i => count = Number(i?.credit) + count)
+        return count
+    }
+    
 
     return (
         <div>
@@ -346,6 +371,7 @@ export default function RegisterClassTab(props) {
                         Thêm
                     </Button>
                 </Input.Group>
+                {currentSemester && <Text type="secondary">Số lượng tín chỉ đăng ký: {countCredit(newListRegisteredClassInSemester)}</Text>}
             </div>
             <div style={{ margin: '0 10px' }}>
                 <Table

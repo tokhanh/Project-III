@@ -47,6 +47,7 @@ export default function Class() {
                     subjectName: i.subjectId.name,
                     subjectId: i.subjectId._id,
                     subjectCode: i.subjectId.code,
+                    credit: i.subjectId.credit,
                     time: `Thứ ${i.time.day}- Ca: ${i.time.shift}`,
                     defaultTime: {
                         day: i.time.day,
@@ -75,6 +76,7 @@ export default function Class() {
         fetchData,
         setListClass,
         student: student?.student?.[0],
+        studentFullInfo: student,
         user,
     }
 
