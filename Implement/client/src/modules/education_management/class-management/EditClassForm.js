@@ -77,12 +77,11 @@ export default function EditClassForm(props) {
     }
 
     const validateDuplicateTime = () => {
-        const listClassInTheSamePlace = listClassInSemester.filter(
+        const listClassInTheSamePlace = listClassInSemester.filter(i => i.code.toString() !== currentClass.code.toString()).filter(
             (i) =>
                 i.position?.trim().toString() ===
                 currentClass?.position.trim().toString()
         )
-        console.log(listClassInTheSamePlace)
         let existedTime = listClassInTheSamePlace.find(
             (i) =>
                 i.defaultTime?.day?.toString() ===
