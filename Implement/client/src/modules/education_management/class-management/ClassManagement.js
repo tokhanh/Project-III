@@ -389,7 +389,7 @@ export default function ClassManagement() {
                 <ManageStudentOfClass
                     data={currentStudentOfClassData}
                     updateClassService={updateClassService}
-                    listAllStudent={listAllStudent}
+                    listAllStudent={listAllStudent.filter(i => i.status === 1)}
                 />
             </Modal>
             <Modal
