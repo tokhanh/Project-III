@@ -61,6 +61,12 @@ const getAllStudents = async (params = {}) => {
     const {} = params
     const keySearch = {}
     const listAllStudents = await Student.find(keySearch)
+        .populate({
+            path: 'institude',
+        })
+        .populate({
+            path: 'educationProgram',
+        })
     return listAllStudents
 }
 
@@ -78,6 +84,11 @@ const removeStudentsOfClass = async (params = {}) => {
     )
     return result
 }
+const updateOneStudents = async (data = {}) => {
+    const { _id, status } = data
+    await Student.findOneAndUpdate({ _id: _id }, { $set: { status: status } })
+    return 'true'
+}
 /**Register unit of study service */
 const getListRegisterUnit = async (params = {}) => {
     const { semester } = params
@@ -89,8 +100,8 @@ const getListRegisterUnit = async (params = {}) => {
     let listRegister = await Term.find(keySearch).populate({
         path: 'subject',
         populate: {
-            path: 'institude'
-        }
+            path: 'institude',
+        },
     })
 
     let listRegisterDistinct = listRegister
@@ -286,6 +297,7 @@ module.exports = {
     updateTimestamp,
     getAllStudents,
     removeStudentsOfClass,
+    updateOneStudents,
     getListSubjects,
     createNewSubject,
     updateSubject,

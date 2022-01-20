@@ -12,6 +12,7 @@ router.put('/timestamp', TrainingDepartmentController.updateTimestamp)
 /**Student controller */
 router.get('/list-student', TrainingDepartmentController.getAllStudents)
 router.post('/remove-student-of-class', TrainingDepartmentController.removeStudentsOfClass)
+router.put('/update-one-student', TrainingDepartmentController.updateOneStudents)
 /**Register unit of study controller */
 router.get('/listRegister', TrainingDepartmentController.getListRegisterUnit)
 

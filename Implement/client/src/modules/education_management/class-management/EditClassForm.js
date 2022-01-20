@@ -105,7 +105,6 @@ export default function EditClassForm(props) {
         handleCancelEditModal()
     }
 
-    console.log(currentClass)
     return (
         <>
             <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>

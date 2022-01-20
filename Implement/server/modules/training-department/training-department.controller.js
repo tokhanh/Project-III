@@ -67,6 +67,20 @@ const removeStudentsOfClass = async (req, res, next) => {
     }
 }
 
+const updateOneStudents = async (req, res, next) => {
+    try {
+        const updateData = req.body
+        const data = await TrainingService.updateOneStudents(updateData)
+        return res.status(200).send({
+            success: true,
+            message: 'get_data_success',
+            content: data,
+        })
+    } catch (err) {
+        next(createHttpError.BadRequest(err))
+    }
+}
+
 const getListSubjects = async (req, res, next) => {
     try {
         const data = await TrainingService.getListSubjects(req.body)
@@ -246,6 +260,7 @@ module.exports = {
     updateTimestamp,
     getAllStudents,
     removeStudentsOfClass,
+    updateOneStudents,
     getListRegisterUnit,
     getListSubjects,
     createNewSubject,
