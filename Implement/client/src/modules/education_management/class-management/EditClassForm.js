@@ -77,11 +77,13 @@ export default function EditClassForm(props) {
     }
 
     const validateDuplicateTime = () => {
-        const listClassInTheSamePlace = listClassInSemester.filter(i => i.code.toString() !== currentClass.code.toString()).filter(
-            (i) =>
-                i.position?.trim().toString() ===
-                currentClass?.position.trim().toString()
-        )
+        const listClassInTheSamePlace = listClassInSemester
+            .filter((i) => i.code.toString() !== currentClass.code.toString())
+            .filter(
+                (i) =>
+                    i.position?.trim().toString() ===
+                    currentClass?.position.trim().toString()
+            )
         let existedTime = listClassInTheSamePlace.find(
             (i) =>
                 i.defaultTime?.day?.toString() ===
@@ -120,6 +122,7 @@ export default function EditClassForm(props) {
                         style={{ width: 150 }}
                         value={Number(currentClass.defaultTime.day)}
                         onChange={onChangeDayValue}
+                        disabled
                     >
                         <Option value={2}>Thứ 2</Option>
                         <Option value={3}>Thứ 3</Option>
@@ -132,6 +135,7 @@ export default function EditClassForm(props) {
                         style={{ width: 150 }}
                         value={Number(currentClass.defaultTime.shift)}
                         onChange={onChangeShiftValue}
+                        disabled
                     >
                         <Option value={1}>1</Option>
                         <Option value={2}>2</Option>
@@ -141,6 +145,7 @@ export default function EditClassForm(props) {
                 </div>
                 <Label>Địa điểm</Label>
                 <Input
+                    disabled
                     value={currentClass.position}
                     onChange={onChangePosition}
                 />
